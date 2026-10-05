@@ -1,0 +1,19 @@
+{
+  "name": "@jejak-rona/site",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@jejak-rona/schema": "workspace:*",
+    "@jejak-rona/tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "astro": "^4.15.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0"
+  }
+}

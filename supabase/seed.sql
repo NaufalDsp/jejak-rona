@@ -1,0 +1,2 @@
+-- Supabase Seed Data — Jejak Rona
+-- Data awal untuk pengujian lokal (akan diisi pada Tahap 3)

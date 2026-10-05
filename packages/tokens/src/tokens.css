@@ -1,0 +1,68 @@
+/* Token Desain Jejak Rona — Acuan dari design.md */
+:root {
+  /* Warna Inti */
+  --ink-950: #12110D;
+  --ink-900: #1B1A15;
+  --ink-700: #3A382F;
+  --bone-50: #F6F1E9;
+  --bone-100: #ECE5D9;
+  --bone-300: #CFC7B8;
+  --stone-500: #7C766A;
+  --stone-700: #4D493F;
+  --moss-700: #3D4A36;
+  --ember-600: #B5522B;
+  --paper-0: #FFFFFF;
+
+  /* Tipografi */
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-ui: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+
+  --text-hero: clamp(2.75rem, 9vw, 10.5rem);
+  --text-display: clamp(2.25rem, 5.5vw, 5rem);
+  --text-h2: clamp(1.75rem, 3.2vw, 2.75rem);
+  --text-h3: 1.375rem;
+  --text-lead: clamp(1.125rem, 1.6vw, 1.5rem);
+  --text-body: 1.0625rem;
+  --text-ui: 0.9375rem;
+  --text-small: 0.8125rem;
+
+  /* Ruang & Tata Letak */
+  --gutter: clamp(16px, 2vw, 24px);
+  --margin-x: clamp(1rem, 4vw, 4rem);
+  --section-y: clamp(96px, 14vw, 200px);
+  --container-max: 1440px;
+
+  /* Bentuk */
+  --radius-ui: 2px;
+  --radius-dialog: 4px;
+  --radius-media: 0;
+
+  /* Gerak & Transisi */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 160ms;
+  --dur-base: 400ms;
+  --dur-slow: 700ms;
+}
+
+/* Suasana Bagian */
+.section--light {
+  background-color: var(--bone-50);
+  color: var(--ink-950);
+}
+
+.section--dark {
+  background-color: var(--ink-950);
+  color: var(--bone-50);
+}
+
+/* Aksesibilitas: Matikan Animasi bila Diminta Pengguna */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

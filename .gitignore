@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build and cache outputs
+dist/
+.astro/
+.output/
+.wrangler/
+build/
+.cache/
+
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+*.pem
+
+# IDE & OS
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test and coverage outputs
+coverage/
+*.lcov
