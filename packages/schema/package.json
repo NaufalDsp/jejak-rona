@@ -10,7 +10,11 @@
   "dependencies": {
     "zod": "^3.23.8"
   },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  },
   "scripts": {
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "verify": "tsx src/verify-contracts.ts"
   }
 }

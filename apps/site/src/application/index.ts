@@ -5,7 +5,6 @@
  * Bergantung pada Domain, namun tidak mengikat diri pada database spesifik.
  */
 
-export interface PageRepositoryPort {
-  getPublishedBySlug(slug: string): Promise<unknown | null>;
-  listPublished(): Promise<unknown[]>;
-}
+export * from "./ports/page-repository.port.js";
+export * from "./ports/deploy-hook.port.js";
+export * from "./use-cases/publish-page.use-case.js";

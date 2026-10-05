@@ -1,15 +1,9 @@
 /**
  * @jejak-rona/schema
- * Titik ekspor skema kontrak data untuk halaman, blok, media, dan aturan domain.
- * Implementasi lengkap disiapkan pada Tahap 2.
+ * Kontrak data dan skema Zod bersama untuk Jejak Rona CMS.
  */
 
-export interface SchemaModuleStatus {
-  initialized: boolean;
-  version: string;
-}
-
-export const schemaStatus: SchemaModuleStatus = {
-  initialized: true,
-  version: "0.1.0",
-};
+export * from "./media.js";
+export * from "./seo.js";
+export * from "./blocks/index.js";
+export * from "./page.js";

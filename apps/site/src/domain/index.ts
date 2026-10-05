@@ -10,3 +10,5 @@ export interface DomainEntity {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export * from "./rules/hero-publish.rule.js";

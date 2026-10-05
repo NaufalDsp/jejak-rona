@@ -6,8 +6,8 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@jejak-rona/schema": "workspace:*",
-    "@jejak-rona/tokens": "workspace:*"
+    "@jejak-rona/schema": "*",
+    "@jejak-rona/tokens": "*"
   },
   "devDependencies": {
     "astro": "^4.15.0",
