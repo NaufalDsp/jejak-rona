@@ -1,0 +1,153 @@
+---
+import "@jejak-rona/tokens/tokens.css";
+
+interface Props {
+  title: string;
+  description: string;
+  heroImage?: string;
+}
+
+const { title, description, heroImage } = Astro.props;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#12110D" />
+    <title>{title}</title>
+    {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Lewati ke konten</a>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Jejak Rona, beranda">JEJAK RONA</a>
+      <span class="header-note">JURNAL VISUAL INDONESIA</span>
+      <button class="menu-trigger" type="button" aria-expanded="false" aria-controls="site-menu">
+        Menu <span aria-hidden="true">+</span>
+      </button>
+    </header>
+
+    <dialog class="menu-dialog" id="site-menu" aria-label="Navigasi utama">
+      <div class="menu-dialog__top">
+        <a class="wordmark" href="/">JEJAK RONA</a>
+        <button class="menu-close" type="button" aria-label="Tutup menu">Tutup <span aria-hidden="true">×</span></button>
+      </div>
+      <nav class="menu-dialog__links" aria-label="Utama">
+        <a href="/">Beranda <span>01</span></a>
+        <a href="/tentang">Tentang <span>02</span></a>
+      </nav>
+      <p class="menu-dialog__foot">Foto yang berbicara. Cerita yang tinggal.</p>
+    </dialog>
+
+    <main id="main-content"><slot /></main>
+
+    <footer class="site-footer">
+      <a class="wordmark" href="/">JEJAK RONA</a>
+      <p>Foto yang berbicara.<br />Cerita yang tinggal.</p>
+      <nav aria-label="Tautan footer">
+        <a href="/tentang">Tentang</a>
+        <button class="cookie-preferences" type="button">Preferensi cookie</button>
+      </nav>
+      <small>© 2026 Jejak Rona</small>
+    </footer>
+
+    <aside class="cookie-banner" aria-label="Preferensi cookie" hidden>
+      <p>Pilihan cookie tersimpan di perangkat ini. Tidak ada analitik pihak ketiga.</p>
+      <div class="cookie-banner__actions">
+        <button class="cookie-settings" type="button">Pengaturan</button>
+        <button class="cookie-reject" type="button">Tolak semua</button>
+        <button class="cookie-accept" type="button">Terima semua</button>
+      </div>
+    </aside>
+
+    <script>
+      const menu = document.querySelector<HTMLDialogElement>("#site-menu");
+      const menuTrigger = document.querySelector<HTMLButtonElement>(".menu-trigger");
+      const menuClose = document.querySelector<HTMLButtonElement>(".menu-close");
+
+      menuTrigger?.addEventListener("click", () => {
+        menu?.showModal();
+        menuTrigger.setAttribute("aria-expanded", "true");
+      });
+
+      const closeMenu = () => {
+        menu?.close();
+        menuTrigger?.setAttribute("aria-expanded", "false");
+      };
+
+      menuClose?.addEventListener("click", closeMenu);
+      menu?.addEventListener("click", (event) => {
+        if (event.target === menu) closeMenu();
+      });
+      menu?.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+
+      const cookieBanner = document.querySelector<HTMLElement>(".cookie-banner");
+      const cookieChoiceKey = "jejak-rona-cookie-choice";
+      const storeCookieChoice = (choice: string) => {
+        localStorage.setItem(cookieChoiceKey, choice);
+        if (cookieBanner) cookieBanner.hidden = true;
+      };
+
+      if (!localStorage.getItem(cookieChoiceKey) && cookieBanner) cookieBanner.hidden = false;
+      document.querySelector(".cookie-reject")?.addEventListener("click", () => storeCookieChoice("essential"));
+      document.querySelector(".cookie-accept")?.addEventListener("click", () => storeCookieChoice("all"));
+      document.querySelector(".cookie-settings")?.addEventListener("click", () => storeCookieChoice("essential"));
+      document.querySelector(".cookie-preferences")?.addEventListener("click", () => {
+        localStorage.removeItem(cookieChoiceKey);
+        if (cookieBanner) cookieBanner.hidden = false;
+      });
+    </script>
+
+    <style is:global>
+      :root { color-scheme: light; font-family: var(--font-ui); font-synthesis: none; }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body { margin: 0; background: var(--bone-50); color: var(--ink-950); }
+      a { color: inherit; }
+      button { color: inherit; font: inherit; }
+      :focus-visible { outline: 2px solid var(--ember-600); outline-offset: 3px; }
+      .skip-link { position: fixed; z-index: 20; top: 8px; left: 8px; padding: 12px 16px; transform: translateY(-150%); background: var(--paper-0); color: var(--ink-950); }
+      .skip-link:focus { transform: translateY(0); }
+      .site-header { position: absolute; z-index: 5; top: 0; left: 0; display: grid; width: 100%; min-height: 76px; grid-template-columns: 1fr 1fr 1fr; align-items: center; padding-inline: var(--margin-x); color: var(--bone-50); }
+      .wordmark { width: fit-content; color: inherit; font-size: 13px; font-weight: 600; letter-spacing: 0; text-decoration: none; }
+      .header-note { justify-self: center; font-size: 11px; }
+      .menu-trigger, .menu-close { display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; justify-self: end; gap: 12px; border: 0; background: transparent; color: inherit; cursor: pointer; text-transform: uppercase; }
+      .menu-trigger span, .menu-close span { font-size: 24px; font-weight: 300; }
+      .menu-dialog { position: fixed; inset: 0; width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 28px var(--margin-x) 48px; border: 0; background: var(--ink-950); color: var(--bone-50); }
+      .menu-dialog::backdrop { background: var(--ink-950); }
+      .menu-dialog[open] { animation: menu-in 280ms var(--ease-out) both; }
+      .menu-dialog__top { display: flex; align-items: center; justify-content: space-between; }
+      .menu-dialog__links { display: grid; max-width: 1050px; margin: 12vh auto 0; }
+      .menu-dialog__links a { display: flex; min-height: 1.35em; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--ink-700); font-family: var(--font-display); font-size: var(--text-display); font-weight: 300; text-decoration: none; }
+      .menu-dialog__links a span { font-family: var(--font-ui); font-size: 12px; }
+      .menu-dialog__foot { position: absolute; right: var(--margin-x); bottom: 36px; color: var(--bone-300); font-size: var(--text-small); }
+      .site-footer { display: grid; grid-template-columns: 1.2fr 1.4fr 1fr auto; gap: 24px; align-items: start; padding: 44px var(--margin-x); background: var(--ink-950); color: var(--bone-50); }
+      .site-footer p, .site-footer small { margin: 0; color: var(--bone-300); font-size: var(--text-small); line-height: 1.6; }
+      .site-footer nav { display: grid; gap: 12px; justify-items: start; }
+      .site-footer nav a, .site-footer nav button { padding: 0; border: 0; background: none; color: inherit; cursor: pointer; font-size: var(--text-small); text-decoration: underline; text-underline-offset: 4px; }
+      .cookie-banner { position: fixed; z-index: 10; bottom: 20px; left: 20px; width: min(450px, calc(100vw - 40px)); padding: 18px; border: 1px solid var(--bone-300); border-radius: 2px; background: var(--paper-0); color: var(--ink-950); }
+      .cookie-banner[hidden] { display: none; }
+      .cookie-banner p { margin: 0 0 16px; font-size: 14px; line-height: 1.5; }
+      .cookie-banner__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+      .cookie-banner__actions button { min-height: 44px; padding: 0 12px; border: 1px solid var(--ink-950); border-radius: 2px; background: transparent; cursor: pointer; font-size: 13px; }
+      .cookie-banner__actions .cookie-accept { background: var(--ink-950); color: var(--bone-50); }
+      @keyframes menu-in { from { opacity: 0; } to { opacity: 1; } }
+      @media (max-width: 767px) {
+        .site-header { min-height: 64px; grid-template-columns: 1fr auto; }
+        .header-note { display: none; }
+        .site-footer { grid-template-columns: 1fr 1fr; }
+        .site-footer small { justify-self: end; }
+        .cookie-banner { bottom: max(10px, env(safe-area-inset-bottom)); left: 10px; width: calc(100vw - 20px); padding: 14px; }
+        .cookie-banner__actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .cookie-banner__actions button { min-width: 0; padding-inline: 6px; font-size: 11px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        .menu-dialog[open] { animation: none; }
+      }
+    </style>
+  </body>
+</html>

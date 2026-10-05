@@ -1,0 +1,127 @@
+---
+import type { HeroMediaBlock } from "@jejak-rona/schema";
+
+interface Props {
+  block: HeroMediaBlock;
+}
+
+const { block } = Astro.props;
+const imageUrl = block.media.kind === "image" ? block.media.url : block.poster || block.media.posterUrl || "";
+const position = block.focalPoint?.desktop ?? { x: block.media.focalX, y: block.media.focalY };
+const mobilePosition = block.focalPoint?.mobile ?? position;
+const scrim = {
+  light: "hero--scrim-light",
+  medium: "hero--scrim-medium",
+  heavy: "hero--scrim-heavy",
+}[block.scrimStrength];
+---
+
+<section
+  class:list={["hero", scrim, `hero--${block.variant}`]}
+  style={`--focus-x:${position.x}%;--focus-y:${position.y}%;--mobile-focus-x:${mobilePosition.x}%;--mobile-focus-y:${mobilePosition.y}%;`}
+  aria-labelledby={`hero-title-${block.id}`}
+>
+  {block.media.kind === "video" ? (
+    <>
+      <img class="hero__poster" src={imageUrl} alt="" fetchpriority="high" width={block.media.width ?? 1920} height={block.media.height ?? 1080} />
+      <video class="hero__video" muted loop playsinline preload="none" poster={imageUrl} aria-hidden="true" data-hero-video>
+        <source src={block.media.url} type={block.media.mimeType} />
+      </video>
+      <button class="hero__pause" type="button" aria-label="Jeda video latar" data-video-toggle hidden>Jeda</button>
+    </>
+  ) : (
+    <picture class="hero__picture">
+      {block.mobileMedia && <source media="(max-width: 767px)" srcset={block.mobileMedia.url} />}
+      <img
+        class="hero__image"
+        src={block.media.url}
+        alt=""
+        width={block.media.width ?? 1920}
+        height={block.media.height ?? 1080}
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
+  )}
+
+  <div class="hero__content">
+    <h1 class="hero__title" id={`hero-title-${block.id}`}>
+      <span class="hero__line"><span>{block.line1}</span></span>
+      <span class="hero__line hero__line--second"><span>{block.line2}</span></span>
+    </h1>
+    {(block.subtext || block.ctaLabel) && (
+      <div class="hero__aside">
+        {block.subtext && <p>{block.subtext}</p>}
+        {block.ctaLabel && block.ctaUrl && (
+          <a class="hero__cta" href={block.ctaUrl}>{block.ctaLabel}<span aria-hidden="true">↗</span></a>
+        )}
+      </div>
+    )}
+  </div>
+</section>
+
+{block.media.kind === "video" && (
+  <script>
+    const video = document.querySelector<HTMLVideoElement>("[data-hero-video]");
+    const toggle = document.querySelector<HTMLButtonElement>("[data-video-toggle]");
+    const shouldAvoidMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      || navigator.connection?.saveData
+      || ["slow-2g", "2g"].includes(navigator.connection?.effectiveType ?? "");
+
+    if (video && toggle && !shouldAvoidMotion) {
+      video.addEventListener("canplay", () => { toggle.hidden = false; }, { once: true });
+      window.addEventListener("load", () => { void video.play().catch(() => {}); }, { once: true });
+      toggle.addEventListener("click", () => {
+        if (video.paused) {
+          void video.play();
+          toggle.textContent = "Jeda";
+          toggle.setAttribute("aria-label", "Jeda video latar");
+        } else {
+          video.pause();
+          toggle.textContent = "Putar";
+          toggle.setAttribute("aria-label", "Putar video latar");
+        }
+      });
+    } else if (video) {
+      video.remove();
+    }
+  </script>
+)}
+
+<style>
+  .hero { position: relative; display: grid; min-height: max(560px, min(100svh, 1100px)); overflow: hidden; align-items: center; background: var(--ink-900); color: var(--bone-50); }
+  .hero::after { position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgb(18 17 13 / 62%), transparent 58%), linear-gradient(180deg, rgb(18 17 13 / 28%), transparent 26%); content: ""; pointer-events: none; }
+  .hero--scrim-light::after { background-image: linear-gradient(0deg, rgb(18 17 13 / 38%), transparent 58%), linear-gradient(180deg, rgb(18 17 13 / 15%), transparent 26%); }
+  .hero--scrim-medium::after { background-image: linear-gradient(0deg, rgb(18 17 13 / 56%), transparent 58%), linear-gradient(180deg, rgb(18 17 13 / 23%), transparent 26%); }
+  .hero--scrim-heavy::after { background-image: linear-gradient(0deg, rgb(18 17 13 / 68%), transparent 58%), linear-gradient(180deg, rgb(18 17 13 / 34%), transparent 26%); }
+  .hero__picture, .hero__image, .hero__poster, .hero__video { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hero__image, .hero__poster, .hero__video { object-fit: cover; object-position: var(--focus-x, 50%) var(--focus-y, 50%); }
+  .hero__video { z-index: 0; }
+  .hero__poster { z-index: 0; }
+  .hero__content { position: relative; z-index: 2; width: 100%; max-width: var(--container-max); margin-inline: auto; padding: 140px var(--margin-x) 80px; }
+  .hero__title { max-width: 100%; margin: 0; font-family: var(--font-display); font-size: var(--text-hero); font-weight: 300; line-height: .92; text-transform: uppercase; }
+  .hero__line { display: block; width: fit-content; overflow: hidden; }
+  .hero__line > span { display: block; animation: reveal-line 700ms var(--ease-out) both; }
+  .hero__line--second { margin-left: 22%; }
+  .hero__line--second > span { animation-delay: 120ms; }
+  .hero__aside { width: min(34ch, 34%); margin: clamp(54px, 8vh, 110px) 0 0 54%; animation: fade-in 400ms 820ms both; }
+  .hero__aside p { margin: 0 0 20px; font-size: var(--text-lead); line-height: 1.35; }
+  .hero__cta { display: inline-flex; min-height: 44px; align-items: center; gap: 20px; padding: 0 14px; border-radius: 2px; background: var(--paper-0); color: var(--ink-950); font-size: var(--text-ui); text-decoration: none; }
+  .hero__cta span { font-size: 18px; }
+  .hero__pause { position: absolute; z-index: 3; right: var(--margin-x); bottom: 24px; min-width: 76px; min-height: 44px; border: 1px solid var(--bone-50); border-radius: 50%; background: transparent; color: var(--bone-50); cursor: pointer; }
+  @keyframes reveal-line { from { transform: translateY(105%); } to { transform: translateY(0); } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @media (max-width: 767px) {
+    .hero__content { display: flex; min-height: max(560px, 100svh); flex-direction: column; justify-content: center; padding: 100px var(--margin-x) max(104px, calc(env(safe-area-inset-bottom) + 84px)); }
+    .hero__title { max-width: 100%; font-size: clamp(2.75rem, 3.5rem, 4rem); }
+    .hero__line { max-width: 100%; }
+    .hero__line--second { margin-left: 12vw; }
+    .hero__aside { width: min(34ch, 100%); margin: auto 0 0; padding-top: 48px; }
+    .hero__image, .hero__poster, .hero__video { object-position: var(--mobile-focus-x, 50%) var(--mobile-focus-y, 50%); }
+    .hero__pause { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__line > span, .hero__aside { animation: none; }
+    .hero__line > span { transform: none; }
+  }
+</style>

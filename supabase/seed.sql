@@ -177,6 +177,29 @@ values (
   }'::jsonb,
   '[
     {
+      "id": "hero-about",
+      "type": "hero_media",
+      "variant": "left",
+      "line1": "TENTANG",
+      "line2": "JEJAK RONA",
+      "subtext": "Ruang bagi foto yang jujur dan cerita yang bertahan.",
+      "scrimStrength": "medium",
+      "focalPoint": { "desktop": { "x": 50, "y": 45 }, "mobile": { "x": 50, "y": 45 } },
+      "media": {
+        "id": "media-hero-about",
+        "kind": "image",
+        "url": "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1920&q=80",
+        "filename": "about-landscape.webp",
+        "mimeType": "image/webp",
+        "width": 1920,
+        "height": 1080,
+        "alt": "Pegunungan dan danau yang tenang di bawah cahaya pagi",
+        "credit": "Unsplash (Unsplash License)",
+        "focalX": 50,
+        "focalY": 45
+      }
+    },
+    {
       "id": "rt-about-1",
       "type": "rich_text",
       "heading": "Filosofi Redaksi",
@@ -184,6 +207,29 @@ values (
     }
   ]'::jsonb,
   '[
+    {
+      "id": "hero-about",
+      "type": "hero_media",
+      "variant": "left",
+      "line1": "TENTANG",
+      "line2": "JEJAK RONA",
+      "subtext": "Ruang bagi foto yang jujur dan cerita yang bertahan.",
+      "scrimStrength": "medium",
+      "focalPoint": { "desktop": { "x": 50, "y": 45 }, "mobile": { "x": 50, "y": 45 } },
+      "media": {
+        "id": "media-hero-about",
+        "kind": "image",
+        "url": "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1920&q=80",
+        "filename": "about-landscape.webp",
+        "mimeType": "image/webp",
+        "width": 1920,
+        "height": 1080,
+        "alt": "Pegunungan dan danau yang tenang di bawah cahaya pagi",
+        "credit": "Unsplash (Unsplash License)",
+        "focalX": 50,
+        "focalY": 45
+      }
+    },
     {
       "id": "rt-about-1",
       "type": "rich_text",

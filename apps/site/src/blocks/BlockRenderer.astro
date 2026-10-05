@@ -1,0 +1,16 @@
+---
+import type { Block } from "@jejak-rona/schema";
+import HeroMedia from "./HeroMedia.astro";
+import RichText from "./RichText.astro";
+import ImageFull from "./ImageFull.astro";
+
+interface Props { blocks: Block[] }
+const { blocks } = Astro.props;
+---
+
+{blocks.map((block) => {
+  if (block.type === "hero_media") return <HeroMedia block={block} />;
+  if (block.type === "rich_text") return <RichText block={block} />;
+  if (block.type === "image_full") return <ImageFull block={block} />;
+  return null;
+})}

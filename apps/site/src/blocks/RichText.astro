@@ -1,0 +1,25 @@
+---
+import type { RichTextBlock } from "@jejak-rona/schema";
+
+interface Props { block: RichTextBlock }
+const { block } = Astro.props;
+const plainText = block.content.replace(/<\/?p>/gi, "").trim();
+---
+
+<section class="text-section" aria-labelledby={`text-${block.id}`}>
+  <div class="text-section__inner">
+    {block.heading && <h2 id={`text-${block.id}`}>{block.heading}</h2>}
+    <p>{plainText}</p>
+  </div>
+</section>
+
+<style>
+  .text-section { padding: var(--section-y) var(--margin-x); background: var(--bone-50); }
+  .text-section__inner { display: grid; max-width: var(--container-max); grid-template-columns: repeat(12, 1fr); gap: var(--gutter); margin-inline: auto; }
+  h2 { grid-column: 2 / 6; margin: 0; font-family: var(--font-display); font-size: var(--text-h2); font-weight: 300; line-height: 1.1; }
+  p { grid-column: 7 / 12; max-width: 68ch; margin: 0; color: var(--stone-700); font-size: var(--text-body); line-height: 1.7; }
+  @media (max-width: 767px) {
+    .text-section__inner { grid-template-columns: 1fr; gap: 20px; }
+    h2, p { grid-column: 1; }
+  }
+</style>

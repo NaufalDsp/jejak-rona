@@ -4,13 +4,16 @@ import BlockRenderer from "../blocks/BlockRenderer.astro";
 import { GetPublishedPageUseCase } from "../application/use-cases/get-published-page.use-case.js";
 import { SupabasePageRepository } from "../infrastructure/supabase/supabase-page.repository.js";
 
-const pages = new GetPublishedPageUseCase(new SupabasePageRepository());
-const page = await pages.executeHome();
+export async function getStaticPaths() {
+  const pages = new GetPublishedPageUseCase(new SupabasePageRepository());
+  const publishedPages = await pages.listAll();
 
-if (!page) {
-  throw new Error("Halaman beranda terbit tidak ditemukan. Periksa Supabase atau fixture publik.");
+  return publishedPages
+    .filter((page) => !page.isHome)
+    .map((page) => ({ params: { slug: page.slug }, props: { page } }));
 }
 
+const { page } = Astro.props;
 const hero = page.blocks.find((block) => block.type === "hero_media");
 const heroImage = hero?.media.kind === "image" ? hero.media.url : hero?.poster || hero?.media.posterUrl;
 ---
