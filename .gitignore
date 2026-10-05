@@ -33,3 +33,8 @@ pnpm-debug.log*
 # Test and coverage outputs
 coverage/
 *.lcov
+
+# Local specification & planning docs (not pushed)
+design.md
+prd.md
+implementation-plan.md
