@@ -325,6 +325,296 @@
         display: none !important;
       }
 
+      .editor-panel {
+        width: 100%;
+        min-width: 0;
+        border-top: 1px solid rgba(18, 17, 13, 0.12);
+        padding-top: 1.5rem;
+      }
+
+      .editor-toolbar,
+      .editor-actions,
+      .page-row,
+      .block-row,
+      .preview-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+
+      .editor-toolbar {
+        margin-bottom: 1rem;
+      }
+
+      .editor-toolbar h2 {
+        margin: 0;
+        font-size: 1.3rem;
+      }
+
+      .editor-message {
+        margin: 0 0 1rem;
+      }
+
+      .editor-message.error,
+      .validation-errors {
+        color: var(--danger-500);
+      }
+
+      .editor-message.success {
+        color: var(--grass-600);
+      }
+
+      .page-list-view {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .page-search {
+        max-width: 460px;
+      }
+
+      .page-list {
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      .page-row {
+        padding: 0.65rem;
+        border-bottom: 1px solid rgba(18, 17, 13, 0.12);
+      }
+
+      .page-row__open {
+        display: grid;
+        gap: 0.25rem;
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        padding: 0.4rem;
+        background: transparent;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .page-row__open span {
+        color: rgba(18, 17, 13, 0.68);
+        font-size: 0.88rem;
+      }
+
+      .compact {
+        padding: 0.55rem 0.75rem;
+      }
+
+      .editor-workspace {
+        display: grid;
+        grid-template-columns: minmax(190px, 0.75fr) minmax(240px, 1fr) minmax(
+            300px,
+            1.35fr
+          );
+        min-height: 580px;
+        border: 1px solid rgba(18, 17, 13, 0.12);
+        background: #fff;
+      }
+
+      .editor-zone {
+        min-width: 0;
+        padding: 1rem;
+        border-right: 1px solid rgba(18, 17, 13, 0.12);
+      }
+
+      .editor-zone:last-child {
+        border-right: 0;
+      }
+
+      .editor-zone h3 {
+        margin: 0 0 0.85rem;
+        font-size: 0.95rem;
+      }
+
+      .editor-field-list {
+        display: grid;
+        align-content: start;
+        gap: 0.8rem;
+        max-height: 540px;
+        overflow-y: auto;
+      }
+
+      .editor-field {
+        display: grid;
+        gap: 0.35rem;
+        font-size: 0.85rem;
+      }
+
+      .editor-field input,
+      .editor-field textarea,
+      .editor-field select {
+        width: 100%;
+        min-width: 0;
+        border: 1px solid rgba(18, 17, 13, 0.2);
+        border-radius: 0.35rem;
+        padding: 0.6rem;
+        background: white;
+      }
+
+      .editor-field textarea {
+        min-height: 92px;
+        resize: vertical;
+      }
+
+      .block-list {
+        display: grid;
+        align-content: start;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .block-row {
+        align-items: stretch;
+        border: 1px solid rgba(18, 17, 13, 0.12);
+        background: #faf8f5;
+      }
+
+      .block-row.selected {
+        border-color: var(--ember-600);
+      }
+
+      .block-row__select {
+        flex: 1;
+        border: 0;
+        padding: 0.65rem;
+        background: transparent;
+        color: inherit;
+        text-align: left;
+        text-transform: capitalize;
+        cursor: pointer;
+      }
+
+      .block-row__actions {
+        display: flex;
+        align-items: center;
+        gap: 0.15rem;
+        padding-right: 0.25rem;
+      }
+
+      .icon-button {
+        width: 36px;
+        height: 36px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--ink-950);
+        font-size: 1.1rem;
+        cursor: pointer;
+      }
+
+      .icon-button:disabled,
+      .nav-item:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      .add-block-row {
+        display: flex;
+        gap: 0.4rem;
+      }
+
+      .add-block-row select {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .preview-toolbar {
+        flex-wrap: wrap;
+        margin-bottom: 0.7rem;
+      }
+
+      .preview-modes {
+        display: flex;
+        gap: 0.35rem;
+      }
+
+      .preview-modes button {
+        min-height: 36px;
+        border: 1px solid rgba(18, 17, 13, 0.2);
+        background: white;
+        cursor: pointer;
+      }
+
+      .preview-modes button[aria-pressed="true"] {
+        border-color: var(--ember-600);
+        box-shadow: inset 0 -2px var(--ember-600);
+      }
+
+      .preview-frame {
+        display: flex;
+        justify-content: center;
+        min-height: 500px;
+        padding: 0.5rem;
+        overflow: auto;
+        background: #e6e2dd;
+      }
+
+      .preview-frame iframe {
+        width: 100%;
+        min-height: 540px;
+        border: 0;
+        background: white;
+      }
+
+      .preview-frame iframe[data-size="tablet"] {
+        width: min(768px, 100%);
+      }
+
+      .preview-frame iframe[data-size="mobile"] {
+        width: min(390px, 100%);
+      }
+
+      .page-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65rem;
+        margin-bottom: 1rem;
+      }
+
+      .page-meta-grid .editor-field {
+        min-width: 0;
+      }
+
+      .delete-dialog {
+        width: min(440px, calc(100% - 2rem));
+        border: 1px solid rgba(18, 17, 13, 0.2);
+        padding: 1.5rem;
+        color: var(--ink-950);
+      }
+
+      .delete-dialog::backdrop {
+        background: rgba(18, 17, 13, 0.55);
+      }
+
+      .delete-dialog h2 {
+        margin-top: 0;
+        font-size: 1.25rem;
+      }
+
+      [data-state="error"] {
+        color: var(--danger-500);
+      }
+
+      [data-state="saved"] {
+        color: var(--grass-600);
+      }
+
+      @media (max-width: 1100px) {
+        .editor-workspace {
+          grid-template-columns: minmax(190px, 0.8fr) minmax(240px, 1fr);
+        }
+
+        .preview-zone {
+          grid-column: 1 / -1;
+          border-top: 1px solid rgba(18, 17, 13, 0.12);
+        }
+      }
+
       @media (max-width: 820px) {
         .shell {
           flex-direction: column;
@@ -342,6 +632,23 @@
           flex-direction: column;
           align-items: flex-start;
         }
+
+        .editor-workspace {
+          grid-template-columns: 1fr;
+        }
+
+        .editor-zone {
+          border-right: 0;
+          border-bottom: 1px solid rgba(18, 17, 13, 0.12);
+        }
+
+        .editor-zone:last-child {
+          border-bottom: 0;
+        }
+
+        .page-meta-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -354,10 +661,16 @@
         </div>
 
         <nav class="nav" aria-label="Menu utama admin">
-          <button class="nav-item active" type="button">Dashboard</button>
-          <button class="nav-item" type="button">Halaman</button>
-          <button class="nav-item" type="button">Media</button>
-          <button class="nav-item" type="button">Pengaturan</button>
+          <button
+            class="nav-item active"
+            type="button"
+            data-admin-view="dashboard">Dashboard</button
+          >
+          <button class="nav-item" type="button" data-admin-view="pages"
+            >Halaman</button
+          >
+          <button class="nav-item" type="button" disabled>Media</button>
+          <button class="nav-item" type="button" disabled>Pengaturan</button>
         </nav>
       </aside>
 
@@ -465,255 +778,199 @@
               </div>
             </div>
           </section>
+
+          <section
+            class="editor-panel hidden"
+            id="page-editor"
+            aria-label="Editor halaman">
+            <div class="editor-toolbar">
+              <h2>Halaman</h2>
+              <div class="editor-actions">
+                <span
+                  id="draft-save-status"
+                  data-state="saved"
+                  aria-live="polite">Memuat halaman…</span
+                >
+                <button class="button primary" id="create-page" type="button"
+                  >Buat halaman</button
+                >
+              </div>
+            </div>
+
+            <p
+              id="editor-message"
+              class="message editor-message hidden"
+              role="status">
+            </p>
+
+            <div id="page-list-view" class="page-list-view">
+              <label class="editor-field page-search">
+                <span>Cari halaman</span>
+                <input
+                  id="page-search"
+                  type="search"
+                  placeholder="Judul atau slug"
+                />
+              </label>
+              <div id="page-list" class="page-list" aria-live="polite"></div>
+            </div>
+
+            <div id="page-edit-view" class="hidden">
+              <div class="editor-toolbar">
+                <button
+                  class="button secondary"
+                  id="back-to-pages"
+                  type="button">Kembali ke daftar</button
+                >
+                <div class="editor-actions">
+                  <button
+                    class="button secondary"
+                    id="undo-edit"
+                    type="button"
+                    title="Undo">Undo</button
+                  >
+                  <button
+                    class="button secondary"
+                    id="redo-edit"
+                    type="button"
+                    title="Redo">Redo</button
+                  >
+                  <button
+                    class="button secondary"
+                    id="delete-page"
+                    type="button">Hapus</button
+                  >
+                </div>
+              </div>
+
+              <form id="page-form" class="page-meta-grid" autocomplete="off">
+                <label class="editor-field"
+                  ><span>Judul halaman</span><input
+                    name="title"
+                    maxlength="120"
+                    required
+                  /></label
+                >
+                <label class="editor-field"
+                  ><span>Slug</span><input
+                    name="slug"
+                    maxlength="100"
+                    pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+                    required
+                  /></label
+                >
+                <label class="editor-field"
+                  ><span>Judul SEO</span><input
+                    name="seo-title"
+                    maxlength="70"
+                    required
+                  /></label
+                >
+                <label class="editor-field"
+                  ><span>Deskripsi SEO</span><textarea
+                    name="seo-description"
+                    maxlength="160"></textarea></label
+                >
+                <label class="editor-field"
+                  ><span
+                    ><input name="is-home" type="checkbox" /> Jadikan beranda</span
+                  ></label
+                >
+              </form>
+
+              <div class="editor-workspace">
+                <section class="editor-zone" aria-label="Urutan blok">
+                  <h3>Blok halaman</h3>
+                  <div id="block-list" class="block-list"></div>
+                  <div class="add-block-row">
+                    <select id="new-block-type" aria-label="Jenis blok baru">
+                      <option value="hero_media">Hero media</option>
+                      <option value="rich_text">Rich text</option>
+                      <option value="image_full">Gambar penuh</option>
+                    </select>
+                    <button class="button compact" id="add-block" type="button"
+                      >Tambah</button
+                    >
+                  </div>
+                  <p class="muted">
+                    Gunakan Alt + ↑ / ↓ untuk memindahkan blok terpilih.
+                  </p>
+                </section>
+
+                <section class="editor-zone" aria-label="Bidang blok terpilih">
+                  <h3>Bidang blok</h3>
+                  <div id="block-fields" class="editor-field-list"></div>
+                </section>
+
+                <section
+                  class="editor-zone preview-zone"
+                  aria-label="Pratinjau draf">
+                  <div class="preview-toolbar">
+                    <h3>Pratinjau draf</h3>
+                    <div
+                      class="preview-modes"
+                      role="group"
+                      aria-label="Ukuran pratinjau">
+                      <button
+                        type="button"
+                        data-preview-size="mobile"
+                        aria-pressed="false">Ponsel</button
+                      >
+                      <button
+                        type="button"
+                        data-preview-size="tablet"
+                        aria-pressed="false">Tablet</button
+                      >
+                      <button
+                        type="button"
+                        data-preview-size="desktop"
+                        aria-pressed="true">Desktop</button
+                      >
+                    </div>
+                  </div>
+                  <div class="preview-frame">
+                    <iframe
+                      id="draft-preview"
+                      title="Pratinjau halaman draf"
+                      data-size="desktop"
+                      sandbox="allow-same-origin"></iframe>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </section>
         </div>
       </main>
     </div>
 
-    <script type="module">
-      import { createClient } from "@supabase/supabase-js";
+    <dialog
+      class="delete-dialog"
+      id="delete-page-dialog"
+      aria-labelledby="delete-title">
+      <h2 id="delete-title">Hapus halaman?</h2>
+      <p>
+        Tindakan ini tidak dapat dibatalkan. Ketik judul halaman untuk
+        mengonfirmasi.
+      </p>
+      <label class="editor-field"
+        ><span>Judul halaman</span><input
+          id="delete-page-name"
+          autocomplete="off"
+        /></label
+      >
+      <div class="inline-actions">
+        <button class="button secondary" id="cancel-delete" type="button"
+          >Batal</button
+        >
+        <button
+          class="button primary"
+          id="delete-page-confirm"
+          type="button"
+          disabled>Hapus permanen</button
+        >
+      </div>
+    </dialog>
 
-      const supabaseUrl =
-        import.meta.env.PUBLIC_SUPABASE_URL ||
-        import.meta.env.SUPABASE_URL ||
-        "";
-      const supabaseAnonKey =
-        import.meta.env.PUBLIC_SUPABASE_ANON_KEY ||
-        import.meta.env.SUPABASE_ANON_KEY ||
-        "";
-
-      const statusText = document.getElementById("status-text");
-      const statusDot = document.getElementById("status-dot");
-      const statusBanner = document.getElementById("status-banner");
-      const authPanel = document.getElementById("auth-panel");
-      const dashboard = document.getElementById("dashboard");
-      const sessionMeta = document.getElementById("session-meta");
-      const logoutButton = document.getElementById("logout-button");
-      const loginForm = document.getElementById("login-form");
-      const emailInput = document.getElementById("email");
-      const passwordInput = document.getElementById("password");
-      const authMessage = document.getElementById("auth-message");
-      const accessMessage = document.getElementById("access-message");
-      const profileOverview = document.getElementById("profile-overview");
-      const roleBadge = document.getElementById("role-badge");
-      const siteUrl = document.getElementById("site-url");
-
-      const envConfigured = Boolean(
-        supabaseUrl &&
-        supabaseAnonKey &&
-        !supabaseUrl.includes("your-project") &&
-        !supabaseAnonKey.includes("your-anon-key"),
-      );
-
-      const showMessage = (element, text, kind = "error") => {
-        element.textContent = text;
-        element.classList.remove("success", "error");
-        element.classList.add(kind);
-        element.classList.add("visible");
-      };
-
-      const clearMessage = (element) => {
-        element.textContent = "";
-        element.classList.remove("visible", "success", "error");
-      };
-
-      const setStatus = (label, tone = "ok") => {
-        statusText.textContent = label;
-        statusBanner.classList.toggle("status-warning", tone === "warn");
-        statusDot.classList.remove("warning", "alert");
-        if (tone === "warn") {
-          statusDot.classList.add("warning");
-        }
-        if (tone === "error") {
-          statusDot.classList.add("alert");
-        }
-      };
-
-      const renderLoggedOut = () => {
-        authPanel.classList.remove("hidden");
-        dashboard.classList.add("hidden");
-        logoutButton.classList.add("hidden");
-        sessionMeta.textContent = "Belum masuk";
-        profileOverview.textContent = "Masuk untuk mengakses dashboard admin.";
-        clearMessage(accessMessage);
-      };
-
-      const renderUnauthorized = (message) => {
-        authPanel.classList.remove("hidden");
-        dashboard.classList.add("hidden");
-        logoutButton.classList.remove("hidden");
-        sessionMeta.textContent = "Sesi aktif";
-        showMessage(authMessage, message, "error");
-        setStatus("Akses ditolak — role tidak valid", "warn");
-      };
-
-      const renderDashboard = (user, profile) => {
-        const role = profile?.role || "editor";
-        authPanel.classList.add("hidden");
-        dashboard.classList.remove("hidden");
-        logoutButton.classList.remove("hidden");
-        sessionMeta.textContent = user.email || "Admin terautentikasi";
-        profileOverview.textContent = `Selamat datang, ${profile?.name || user.email || "admin"}.`;
-        roleBadge.textContent = role;
-        clearMessage(authMessage);
-        setStatus("Admin siap", "ok");
-      };
-
-      if (!envConfigured) {
-        setStatus("Konfigurasi Supabase belum siap", "warn");
-        renderLoggedOut();
-        showMessage(
-          authMessage,
-          "Isi PUBLIC_SUPABASE_URL dan PUBLIC_SUPABASE_ANON_KEY di lingkungan lokal untuk mengaktifkan login.",
-          "error",
-        );
-      }
-
-      const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true,
-        },
-      });
-
-      const ensureRole = async (session) => {
-        if (!session?.user) {
-          renderLoggedOut();
-          return;
-        }
-
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("role, name")
-          .eq("id", session.user.id)
-          .maybeSingle();
-
-        if (error) {
-          renderUnauthorized(
-            "Gagal memeriksa role di tabel profiles. Periksa RLS dan migrasi database.",
-          );
-          return;
-        }
-
-        const role = data?.role || null;
-        if (!role || !["admin", "editor"].includes(role)) {
-          renderUnauthorized(
-            "Akses ditolak: pengguna belum terdaftar sebagai admin/editor di tabel profiles.",
-          );
-          return;
-        }
-
-        renderDashboard(session.user, data || { role, name: "Staff" });
-      };
-
-      const handleLogin = async (event) => {
-        event.preventDefault();
-        const email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
-
-        if (!envConfigured) {
-          showMessage(
-            authMessage,
-            "Tentukan konfigurasi Supabase terlebih dahulu.",
-            "error",
-          );
-          return;
-        }
-
-        if (!email || !password) {
-          showMessage(
-            authMessage,
-            "Email dan kata sandi wajib diisi.",
-            "error",
-          );
-          return;
-        }
-
-        setStatus("Memproses login…", "warn");
-        clearMessage(authMessage);
-
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (error) {
-          setStatus("Login gagal", "error");
-          showMessage(
-            authMessage,
-            error.message || "Login gagal. Cek kredensial Anda.",
-            "error",
-          );
-          return;
-        }
-
-        await ensureRole(data.session);
-      };
-
-      const handleReset = async () => {
-        const email = emailInput.value.trim();
-
-        if (!email) {
-          showMessage(
-            authMessage,
-            "Masukkan email untuk mengirim tautan reset kata sandi.",
-            "error",
-          );
-          return;
-        }
-
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin + "/admin",
-        });
-
-        if (error) {
-          showMessage(authMessage, error.message, "error");
-          return;
-        }
-
-        setStatus("Tautan reset dikirim", "ok");
-        showMessage(
-          authMessage,
-          "Tautan reset kata sandi telah dikirim ke email Anda.",
-          "success",
-        );
-      };
-
-      const handleLogout = async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-          showMessage(authMessage, error.message, "error");
-          return;
-        }
-
-        renderLoggedOut();
-        setStatus("Sesi admin selesai", "ok");
-      };
-
-      loginForm.addEventListener("submit", handleLogin);
-      document
-        .getElementById("reset-password")
-        .addEventListener("click", handleReset);
-      logoutButton.addEventListener("click", handleLogout);
-
-      siteUrl.textContent = window.location.origin;
-
-      supabase.auth.onAuthStateChange(async (_event, session) => {
-        if (_event === "SIGNED_OUT") {
-          renderLoggedOut();
-          setStatus("Belum masuk", "ok");
-          return;
-        }
-
-        if (session) {
-          await ensureRole(session);
-        }
-      });
-
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      await ensureRole(session);
-    </script>
+    <script src="../admin/admin-auth.ts"></script>
   </body>
 </html>

@@ -46,6 +46,34 @@ cp .env.example .env
 
 Isi variabel sesuai kredensial Supabase dan Cloudflare.
 
+### Supabase lokal
+
+Pasang Supabase CLI dan Docker Desktop, lalu jalankan dari root repo:
+
+```bash
+npm run supabase:start
+npm run supabase:status
+```
+
+CLI menerapkan `supabase/migrations` dan `supabase/seed.sql`. Salin URL lokal
+dan anon key dari keluaran status ke variabel `SUPABASE_URL`,
+`SUPABASE_ANON_KEY`, `PUBLIC_SUPABASE_URL`, dan `PUBLIC_SUPABASE_ANON_KEY` di
+`.env`. Untuk mengulang database lokal dari awal, gunakan
+`npm run supabase:reset`; perintah ini menghapus data database lokal.
+
+Pendaftaran publik dinonaktifkan. Buat/invite user pertama lewat Supabase Studio
+(Auth → Users), lalu jadikan admin dari SQL Editor setelah trigger membuat
+profil:
+
+```sql
+update public.profiles
+set role = 'admin'
+where id = (select id from auth.users where email = 'email-admin-anda');
+```
+
+Jangan pernah menaruh `SUPABASE_SERVICE_ROLE_KEY` di variabel `PUBLIC_*` atau di
+kode browser. Gunakan hanya di server/function tepercaya.
+
 ## Prinsip Pengembangan
 
 1. **Clean Code & Clean Architecture:** Domain murni tidak boleh bergantung pada
