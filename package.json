@@ -8,6 +8,7 @@
     "apps/*"
   ],
   "scripts": {
+    "build": "npm --prefix apps/site run build",
     "check-types": "tsc --build",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
