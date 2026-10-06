@@ -6,6 +6,7 @@ import {
 } from "@jejak-rona/schema";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { openMediaPicker } from "./media-manager.js";
+import { PublishingWorkflow } from "./publishing-workflow.js";
 
 interface PageRow {
   id: string;
@@ -1078,6 +1079,121 @@ export function mountPageEditor(client: SupabaseClient, user: User): void {
         button.classList.add("active");
         if (view === "pages") void loadPages();
       });
+    });
+
+  const publishing = new PublishingWorkflow(client, user);
+
+  // Handler tombol Publish Halaman (Tahap 8)
+  document
+    .getElementById("publish-page-btn")
+    ?.addEventListener("click", async () => {
+      if (!current) return;
+      const btn = document.getElementById(
+        "publish-page-btn",
+      ) as HTMLButtonElement | null;
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "Menerbitkan…";
+      }
+      setSaveStatus("Menerbitkan draf…", "saving");
+
+      const res = await publishing.publishPage(current.id);
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = "🚀 Terbitkan Halaman";
+      }
+
+      if (!res.success) {
+        alert(res.message);
+        setSaveStatus("Gagal terbit", "error");
+      } else {
+        alert(res.message);
+        setSaveStatus("Terbit & Tayang", "saved");
+        current.status = "published";
+        renderPageList();
+      }
+    });
+
+  // Handler tombol Riwayat Revisi & Pemulihan (Tahap 8)
+  const revisionsDialog = document.getElementById(
+    "revisions-dialog",
+  ) as HTMLDialogElement | null;
+  document
+    .getElementById("close-revisions-dialog")
+    ?.addEventListener("click", () => revisionsDialog?.close());
+
+  document
+    .getElementById("view-revisions-btn")
+    ?.addEventListener("click", async () => {
+      if (!current) return;
+      const tbody = document.getElementById("revisions-table-body");
+      if (tbody) {
+        tbody.innerHTML =
+          '<tr><td colspan="4" class="muted" style="text-align:center; padding:1rem;">Mengambil catatan revisi…</td></tr>';
+      }
+      revisionsDialog?.showModal();
+
+      const revs = await publishing.getRevisions(current.id);
+      if (!tbody) return;
+      tbody.replaceChildren();
+
+      if (revs.length === 0) {
+        const tr = document.createElement("tr");
+        tr.innerHTML =
+          '<td colspan="4" class="muted" style="text-align:center; padding:1.5rem;">Belum ada riwayat revisi. Halaman ini belum pernah diterbitkan.</td>';
+        tbody.append(tr);
+        return;
+      }
+
+      for (const rev of revs) {
+        const tr = document.createElement("tr");
+        const dateStr = new Date(rev.created_at).toLocaleString("id-ID");
+        const blocksCount = rev.snapshot.blocks?.length || 0;
+        tr.innerHTML = `
+        <td><strong>${dateStr}</strong></td>
+        <td>${rev.snapshot.title || "-"}</td>
+        <td>${blocksCount} blok</td>
+        <td style="text-align: right;">
+          <button class="btn-secondary" style="font-size: 11px; padding: 3px 8px;" data-restore-rev="${rev.id}">Pulihkan ke Draf</button>
+        </td>
+      `;
+
+        tr.querySelector(`[data-restore-rev="${rev.id}"]`)?.addEventListener(
+          "click",
+          async () => {
+            if (
+              !confirm(
+                `Pulihkan draf halaman ke versi tanggal ${dateStr}? Perubahan yang belum tersimpan akan tertimpa.`,
+              )
+            )
+              return;
+            const restoreRes = await publishing.restoreRevision(
+              current!.id,
+              rev.id,
+            );
+            if (!restoreRes.success) {
+              alert(restoreRes.message);
+            } else {
+              alert(restoreRes.message);
+              revisionsDialog?.close();
+              if (restoreRes.restoredBlocks) {
+                current!.blocks = restoreRes.restoredBlocks;
+                current!.title = rev.snapshot.title;
+                current!.slug = rev.snapshot.slug;
+                current!.seo = rev.snapshot.seo;
+                current!.isHome = rev.snapshot.is_home;
+                selectedBlockId = current!.blocks[0]?.id ?? null;
+                renderEditor();
+                renderBlockList();
+                renderBlockFields();
+                renderPreview();
+              }
+            }
+          },
+        );
+
+        tbody.append(tr);
+      }
     });
 
   pageForm.addEventListener("submit", (event) => event.preventDefault());

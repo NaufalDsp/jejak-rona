@@ -6,6 +6,7 @@ import {
 } from "@supabase/supabase-js";
 import { mountPageEditor } from "./page-editor.js";
 import { mountMediaManager } from "./media-manager.js";
+import { SettingsNavManager } from "./settings-nav-manager.js";
 
 type StaffProfile = { role: "admin" | "editor"; name: string };
 type StatusTone = "ok" | "warn" | "error";
@@ -21,6 +22,7 @@ const authPanel = getEl<HTMLElement>("auth-panel");
 const dashboard = getEl<HTMLElement>("dashboard");
 const pageEditor = getEl<HTMLElement>("page-editor");
 const mediaPanel = getEl<HTMLElement>("media-panel");
+const settingsPanel = getEl<HTMLElement>("settings-panel");
 const sessionMeta = getEl<HTMLSpanElement>("session-meta");
 const logoutButton = getEl<HTMLButtonElement>("logout-button");
 const loginForm = getEl<HTMLFormElement>("login-form");
@@ -69,8 +71,11 @@ function setStatus(label: string, tone: StatusTone = "ok"): void {
 
 let isMounted = false;
 let mediaManager: ReturnType<typeof mountMediaManager> | null = null;
+let settingsNavManager: SettingsNavManager | null = null;
 
-function switchView(viewName: "dashboard" | "pages" | "media"): void {
+function switchView(
+  viewName: "dashboard" | "pages" | "media" | "settings",
+): void {
   const navItems =
     document.querySelectorAll<HTMLButtonElement>("[data-admin-view]");
   navItems.forEach((btn) => {
@@ -85,6 +90,13 @@ function switchView(viewName: "dashboard" | "pages" | "media"): void {
       void mediaManager?.loadMedia(false);
     }
   }
+  if (settingsPanel) {
+    settingsPanel.classList.toggle("hidden", viewName !== "settings");
+    if (viewName === "settings" && settingsNavManager) {
+      void settingsNavManager.loadSettings();
+      void settingsNavManager.loadNavItems();
+    }
+  }
 }
 
 function setupNavigation(): void {
@@ -92,7 +104,8 @@ function setupNavigation(): void {
     document.querySelectorAll<HTMLButtonElement>("[data-admin-view]");
   navItems.forEach((btn) => {
     btn.addEventListener("click", () => {
-      const view = btn.dataset.adminView as "dashboard" | "pages" | "media";
+      const view = btn.dataset.adminView as
+        "dashboard" | "pages" | "media" | "settings";
       if (view) switchView(view);
     });
   });
@@ -118,6 +131,7 @@ function renderLoggedOut(): void {
   dashboard?.classList.add("hidden");
   pageEditor?.classList.add("hidden");
   mediaPanel?.classList.add("hidden");
+  settingsPanel?.classList.add("hidden");
   logoutButton?.classList.add("hidden");
   if (sessionMeta) sessionMeta.textContent = "Belum masuk";
   if (profileOverview)
@@ -129,6 +143,7 @@ function renderUnauthorized(message: string): void {
   dashboard?.classList.add("hidden");
   pageEditor?.classList.add("hidden");
   mediaPanel?.classList.add("hidden");
+  settingsPanel?.classList.add("hidden");
   logoutButton?.classList.remove("hidden");
   if (sessionMeta) sessionMeta.textContent = "Sesi aktif";
   showMessage(authMessage, message);
@@ -221,6 +236,34 @@ const supabase: SupabaseClient | null = envConfigured
     })
   : null;
 
+async function watchBuildStatus(client: SupabaseClient): Promise<void> {
+  const check = async () => {
+    try {
+      const { data } = await client
+        .from("site_settings")
+        .select("value")
+        .eq("key", "build_status")
+        .maybeSingle();
+
+      if (data?.value) {
+        const val = data.value as { state: string; message: string };
+        if (val.state === "building") {
+          setStatus(val.message || "Membangun situs statis…", "warn");
+        } else if (val.state === "failed") {
+          setStatus("Build situs gagal", "error");
+        } else {
+          setStatus("Situs tayang (Astro)", "ok");
+        }
+      }
+    } catch {
+      // Abaikan jika jaringan offline
+    }
+  };
+
+  void check();
+  window.setInterval(() => void check(), 6000);
+}
+
 async function ensureRole(session: Session | null): Promise<void> {
   if (!session?.user || !supabase) {
     renderLoggedOut();
@@ -255,7 +298,10 @@ async function ensureRole(session: Session | null): Promise<void> {
     setupNavigation();
     mountPageEditor(supabase, session.user);
     mediaManager = mountMediaManager(supabase, session.user);
+    settingsNavManager = new SettingsNavManager(supabase);
+    settingsNavManager.init();
     void refreshDashboardStats(supabase);
+    void watchBuildStatus(supabase);
   }
 }
 

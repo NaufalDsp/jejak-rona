@@ -76,9 +76,7 @@ import "../admin/admin.css";
           <button
             class="admin-nav-item"
             type="button"
-            data-admin-view="settings"
-            disabled
-            title="Tersedia di Tahap 8">
+            data-admin-view="settings">
             <svg
               width="15"
               height="15"
@@ -292,7 +290,7 @@ import "../admin/admin.css";
                     aria-live="polite">Tersimpan</span
                   >
                 </div>
-                <div style="display: flex; gap: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
                   <button
                     class="btn-secondary"
                     id="undo-edit"
@@ -305,8 +303,20 @@ import "../admin/admin.css";
                     type="button"
                     title="Ulangi (Redo)">Redo</button
                   >
+                  <button
+                    class="btn-secondary"
+                    id="view-revisions-btn"
+                    type="button"
+                    title="Riwayat snapshot revisi">📜 Riwayat Revisi</button
+                  >
+                  <button
+                    class="btn-primary"
+                    id="publish-page-btn"
+                    type="button"
+                    style="font-weight: 600;">🚀 Terbitkan Halaman</button
+                  >
                   <button class="btn-text-danger" id="delete-page" type="button"
-                    >Hapus Halaman</button
+                    >Hapus</button
                   >
                 </div>
               </div>
@@ -573,6 +583,227 @@ import "../admin/admin.css";
               <div class="media-grid" id="media-grid"></div>
             </div>
           </section>
+
+          <!-- 5. TAHAP 8: PENGATURAN SITUS & NAVIGASI -->
+          <section
+            class="hidden"
+            id="settings-panel"
+            aria-label="Pengaturan situs dan navigasi">
+            <!-- Bagian A: Menu Navigasi Situs -->
+            <div class="admin-card" style="margin-bottom: 1.5rem;">
+              <div class="admin-card__header">
+                <div>
+                  <h2 class="admin-card__title">Navigasi Menu Situs</h2>
+                  <span class="muted" style="font-size: 13px;"
+                    >Kelola tautan menu header publik (maksimal 2 tingkat).</span
+                  >
+                </div>
+              </div>
+
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Label Menu</th>
+                    <th>URL Tujuan</th>
+                    <th>Tipe Sasaran</th>
+                    <th>Urutan</th>
+                    <th style="text-align: right;">Tindakan</th>
+                  </tr>
+                </thead>
+                <tbody id="nav-items-table-body">
+                  <tr>
+                    <td
+                      colspan="5"
+                      class="muted"
+                      style="text-align: center; padding: 1.5rem;"
+                      >Memuat daftar menu…</td
+                    >
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Formulir Tambah Menu Baru -->
+              <div
+                style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--bone-200); display: grid; grid-template-columns: 200px 1fr 180px auto; gap: 0.75rem; align-items: end;">
+                <div>
+                  <label
+                    style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                    >Label Baru</label
+                  >
+                  <input
+                    id="new-nav-label"
+                    placeholder="Contoh: Artikel"
+                    style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+                  />
+                </div>
+                <div>
+                  <label
+                    style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                    >URL / Slug</label
+                  >
+                  <input
+                    id="new-nav-url"
+                    placeholder="Contoh: /artikel atau https://…"
+                    style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+                  />
+                </div>
+                <div>
+                  <label
+                    style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                    >Jenis Sasaran</label
+                  >
+                  <select
+                    id="new-nav-type"
+                    style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;">
+                    <option value="page">Halaman Internal</option>
+                    <option value="url">Tautan Eksternal</option>
+                  </select>
+                </div>
+                <div>
+                  <button
+                    class="btn-primary"
+                    id="add-nav-item-btn"
+                    type="button">+ Tambah Menu</button
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Bagian B: Pengaturan Global Situs -->
+            <div class="admin-card">
+              <div class="admin-card__header">
+                <div>
+                  <h2 class="admin-card__title">
+                    Pengaturan Identitas & Metadata Situs
+                  </h2>
+                  <span class="muted" style="font-size: 13px;"
+                    >Konfigurasi nama, wordmark, footer, dan banner cookie.</span
+                  >
+                </div>
+                <div>
+                  <span id="settings-status-message"></span>
+                </div>
+              </div>
+
+              <form id="settings-form">
+                <div
+                  style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+                  <div>
+                    <label
+                      style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                      >Nama Situs</label
+                    >
+                    <input
+                      id="setting-site-name"
+                      required
+                      style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                      >Wordmark (Teks Header)</label
+                    >
+                    <input
+                      id="setting-wordmark"
+                      required
+                      style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+                    />
+                  </div>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                  <label
+                    style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                    >Tagline Editorial</label
+                  >
+                  <input
+                    id="setting-tagline"
+                    style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+                  />
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                  <label
+                    style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                    >Deskripsi Default SEO</label
+                  >
+                  <textarea
+                    id="setting-description"
+                    rows="2"
+                    style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+                  ></textarea>
+                </div>
+
+                <div
+                  style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                  <div>
+                    <label
+                      style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                      >Instagram URL</label
+                    >
+                    <input
+                      id="setting-instagram"
+                      placeholder="https://instagram.com/…"
+                      style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                      >Twitter / X URL</label
+                    >
+                    <input
+                      id="setting-twitter"
+                      placeholder="https://x.com/…"
+                      style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                      >YouTube URL</label
+                    >
+                    <input
+                      id="setting-youtube"
+                      placeholder="https://youtube.com/…"
+                      style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem;">
+                  <div>
+                    <label
+                      style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                      >Teks Hak Cipta Footer</label
+                    >
+                    <input
+                      id="setting-footer"
+                      style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+                      >Teks Banner Cookie</label
+                    >
+                    <input
+                      id="setting-cookie"
+                      style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+                    />
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end;">
+                  <button class="btn-primary" type="submit"
+                    >Simpan Semua Pengaturan</button
+                  >
+                </div>
+              </form>
+            </div>
+          </section>
         </div>
       </main>
     </div>
@@ -717,6 +948,50 @@ import "../admin/admin.css";
         class="media-grid"
         id="picker-media-grid"
         style="max-height: 55vh; overflow-y: auto;">
+      </div>
+    </dialog>
+
+    <!-- DIALOG RIWAYAT REVISI & PEMULIHAN DRAF (PRD 8.1 & 8.2) -->
+    <dialog
+      class="admin-card"
+      id="revisions-dialog"
+      style="width: min(720px, 95vw); border: 1px solid var(--bone-300); padding: 1.5rem;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bone-200); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 600;">
+          Riwayat Snapshot Revisi Halaman
+        </h3>
+        <button class="btn-text" id="close-revisions-dialog" type="button"
+          >Tutup</button
+        >
+      </div>
+      <p
+        style="font-size: 13px; color: var(--stone-700); margin-top: 0; margin-bottom: 1rem;">
+        Setiap kali halaman diterbitkan, snapshot otomatis dicatat (maksimal 20
+        riwayat). Anda dapat memulihkan draf ke versi mana pun di bawah:
+      </p>
+
+      <div id="revisions-list" style="max-height: 50vh; overflow-y: auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Waktu Terbit</th>
+              <th>Judul Saat Itu</th>
+              <th>Jumlah Blok</th>
+              <th style="text-align: right;">Tindakan</th>
+            </tr>
+          </thead>
+          <tbody id="revisions-table-body">
+            <tr>
+              <td
+                colspan="4"
+                class="muted"
+                style="text-align: center; padding: 1rem;"
+                >Memuat riwayat revisi…</td
+              >
+            </tr>
+          </tbody>
+        </table>
       </div>
     </dialog>
 
