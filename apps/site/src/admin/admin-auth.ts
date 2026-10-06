@@ -67,6 +67,9 @@ function setStatus(label: string, tone: StatusTone = "ok"): void {
   }
 }
 
+let isMounted = false;
+let mediaManager: ReturnType<typeof mountMediaManager> | null = null;
+
 function switchView(viewName: "dashboard" | "pages" | "media"): void {
   const navItems =
     document.querySelectorAll<HTMLButtonElement>("[data-admin-view]");
@@ -76,7 +79,12 @@ function switchView(viewName: "dashboard" | "pages" | "media"): void {
 
   if (dashboard) dashboard.classList.toggle("hidden", viewName !== "dashboard");
   if (pageEditor) pageEditor.classList.toggle("hidden", viewName !== "pages");
-  if (mediaPanel) mediaPanel.classList.toggle("hidden", viewName !== "media");
+  if (mediaPanel) {
+    mediaPanel.classList.toggle("hidden", viewName !== "media");
+    if (viewName === "media") {
+      void mediaManager?.loadMedia(false);
+    }
+  }
 }
 
 function setupNavigation(): void {
@@ -213,8 +221,6 @@ const supabase: SupabaseClient | null = envConfigured
     })
   : null;
 
-let isMounted = false;
-
 async function ensureRole(session: Session | null): Promise<void> {
   if (!session?.user || !supabase) {
     renderLoggedOut();
@@ -248,7 +254,7 @@ async function ensureRole(session: Session | null): Promise<void> {
     isMounted = true;
     setupNavigation();
     mountPageEditor(supabase, session.user);
-    mountMediaManager(supabase, session.user);
+    mediaManager = mountMediaManager(supabase, session.user);
     void refreshDashboardStats(supabase);
   }
 }

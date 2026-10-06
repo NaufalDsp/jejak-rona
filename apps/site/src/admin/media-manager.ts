@@ -50,6 +50,7 @@ export class MediaManager {
 
   public init(): void {
     this.bindGlobalEvents();
+    void this.loadMedia(false);
   }
 
   public openPicker(onSelect: MediaSelectCallback): void {
@@ -612,6 +613,7 @@ export function mountMediaManager(
 ): MediaManager {
   if (!activeMediaManager) {
     activeMediaManager = new MediaManager(supabase, user);
+    activeMediaManager.init();
   }
   return activeMediaManager;
 }
