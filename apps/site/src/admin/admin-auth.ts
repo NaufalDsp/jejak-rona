@@ -148,6 +148,9 @@ function setupNavigation(): void {
 }
 
 function renderLoggedOut(): void {
+  const shell = document.querySelector(".admin-shell");
+  shell?.classList.add("is-logged-out");
+  shell?.classList.remove("is-logged-in");
   authPanel?.classList.remove("hidden");
   dashboard?.classList.add("hidden");
   pageEditor?.classList.add("hidden");
@@ -162,6 +165,9 @@ function renderLoggedOut(): void {
 }
 
 function renderUnauthorized(message: string): void {
+  const shell = document.querySelector(".admin-shell");
+  shell?.classList.add("is-logged-out");
+  shell?.classList.remove("is-logged-in");
   authPanel?.classList.remove("hidden");
   dashboard?.classList.add("hidden");
   pageEditor?.classList.add("hidden");
@@ -239,6 +245,9 @@ async function refreshDashboardStats(client: SupabaseClient): Promise<void> {
 }
 
 function renderDashboard(user: User, profile: StaffProfile): void {
+  const shell = document.querySelector(".admin-shell");
+  shell?.classList.remove("is-logged-out");
+  shell?.classList.add("is-logged-in");
   authPanel?.classList.add("hidden");
   dashboard?.classList.remove("hidden");
   logoutButton?.classList.remove("hidden");

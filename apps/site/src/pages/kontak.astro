@@ -131,6 +131,16 @@ import SiteLayout from "../layouts/SiteLayout.astro";
   const errEmail = document.getElementById("error-email");
   const errMessage = document.getElementById("error-message");
 
+  nameInput?.addEventListener("input", () => {
+    if (errName) errName.hidden = true;
+  });
+  emailInput?.addEventListener("input", () => {
+    if (errEmail) errEmail.hidden = true;
+  });
+  msgInput?.addEventListener("input", () => {
+    if (errMessage) errMessage.hidden = true;
+  });
+
   const supabaseUrl =
     import.meta.env.PUBLIC_SUPABASE_URL ||
     "https://vmejzesgssrghhjlrdhr.supabase.co";
@@ -320,12 +330,20 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 
   /* 6.10 Pesan Galat di Bawah Bidang dengan ember-600 dan tanda (!) */
   .field-error {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 0.35rem;
     font-size: var(--text-small, 0.8125rem);
     color: var(--ember-600, #b83d1b);
     margin-top: 0.25rem;
+  }
+
+  .field-error:not([hidden]) {
+    display: flex;
+  }
+
+  .field-error[hidden] {
+    display: none !important;
   }
 
   .error-icon {
@@ -345,6 +363,10 @@ import SiteLayout from "../layouts/SiteLayout.astro";
     font-size: var(--text-small, 0.8125rem);
     color: var(--ember-600, #b83d1b);
     margin: 0;
+  }
+
+  .general-error[hidden] {
+    display: none !important;
   }
 
   /* Tombol Utama Gelap Sesuai 6.10 */

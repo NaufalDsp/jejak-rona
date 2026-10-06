@@ -60,6 +60,33 @@ button, input, textarea, select {
   min-height: 100vh;
 }
 
+/* Keadaan saat belum login: sembunyikan sidebar & topbar */
+.admin-shell.is-logged-out .admin-sidebar,
+.admin-shell.is-logged-out .admin-topbar {
+  display: none !important;
+}
+
+.admin-shell.is-logged-out .admin-main {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 20%, #FAF7F2 0%, #E8E0D2 100%);
+}
+
+.admin-shell.is-logged-out .admin-content {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Sidebar Ramping & Padat */
 .admin-sidebar {
   width: 220px;
@@ -72,33 +99,22 @@ button, input, textarea, select {
 }
 
 .admin-brand {
-  padding: 1.25rem 1.25rem 1rem;
+  padding: 1.25rem 1.25rem 1.15rem;
   display: flex;
   align-items: center;
-  gap: 0.65rem;
   border-bottom: 1px solid var(--ink-900);
 }
 
-.brand-badge {
-  display: inline-flex;
+.admin-brand-link {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  background: var(--ember-600);
-  color: var(--bone-50);
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  border-radius: 2px;
+  text-decoration: none;
 }
 
-.brand-title {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--bone-50);
+.admin-brand-logo {
+  display: block;
+  max-width: 145px;
+  height: auto;
 }
 
 .admin-nav {
@@ -720,60 +736,185 @@ button, input, textarea, select {
   background: rgba(18, 17, 13, 0.6);
 }
 
-/* Auth Card Modern (Ganti Tampilan AI Slop) */
+/* Auth Container & Box Redesign */
 .auth-container {
-  min-height: calc(100vh - 52px);
+  min-height: 100vh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 2.5rem 1.5rem;
 }
 
 .auth-box {
   width: 100%;
-  max-width: 380px;
-  background: var(--paper-0);
-  border: 1px solid var(--bone-200);
-  border-radius: 2px;
-  padding: 2rem;
+  max-width: 440px;
+  background: #FFFFFF;
+  border: 1px solid var(--bone-200, #DDD5C7);
+  border-radius: 8px;
+  padding: 2.75rem 2.25rem 2.25rem;
+  box-shadow: 0 20px 48px -12px rgba(18, 17, 13, 0.12), 0 2px 8px rgba(18, 17, 13, 0.04);
 }
 
-.auth-box h1 {
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-brand-emblem {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--bone-50, #F6F1E9);
+  border: 1px solid var(--bone-200, #DDD5C7);
+  box-shadow: 0 4px 14px rgba(18, 17, 13, 0.06);
+  margin-bottom: 1.25rem;
+}
+
+.auth-badge {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ember-600, #B5522B);
+  margin-bottom: 0.5rem;
+}
+
+.auth-title {
   margin: 0 0 0.5rem;
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-family: var(--font-serif, "Newsreader", serif);
+  font-size: 1.75rem;
+  font-weight: 500;
   letter-spacing: -0.01em;
+  color: var(--ink-950, #12110D);
 }
 
-.auth-box p {
-  margin: 0 0 1.5rem;
-  color: var(--stone-500);
+.auth-desc {
+  margin: 0;
+  color: var(--stone-500, #7C766A);
   font-size: 13px;
+  line-height: 1.55;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .form-group label {
   display: block;
   font-size: 12px;
   font-weight: 600;
-  margin-bottom: 0.35rem;
-  color: var(--ink-950);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.45rem;
+  color: var(--ink-950, #12110D);
 }
 
-.form-group input {
+.form-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+
+.form-label-row label {
+  margin-bottom: 0;
+}
+
+.btn-text-forgot {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--stone-500, #7C766A);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.btn-text-forgot:hover {
+  color: var(--ember-600, #B5522B);
+}
+
+.input-wrapper input {
   width: 100%;
-  padding: 0.55rem 0.75rem;
-  border: 1px solid var(--bone-300);
-  border-radius: 2px;
-  background: var(--paper-0);
-  font-size: 13px;
+  padding: 0.75rem 0.95rem;
+  border: 1.5px solid var(--bone-300, #CFC7B8);
+  border-radius: 4px;
+  background: #FAF8F5;
+  font-size: 13.5px;
+  color: var(--ink-950, #12110D);
+  transition: all 0.2s ease;
 }
 
-.form-group input:focus {
-  border-color: var(--ink-950);
+.input-wrapper input:focus {
+  background: #FFFFFF;
+  border-color: var(--ink-950, #12110D);
+  box-shadow: 0 0 0 3px rgba(18, 17, 13, 0.08);
+  outline: none;
+}
+
+.btn-auth-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  margin-top: 0.75rem;
+  background: var(--ink-950, #12110D);
+  color: var(--bone-50, #F6F1E9);
+  border: 1px solid var(--ink-950, #12110D);
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(18, 17, 13, 0.16);
+  transition: all 0.2s ease;
+}
+
+.btn-auth-submit:hover {
+  background: #000000;
+  border-color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(18, 17, 13, 0.24);
+}
+
+.btn-auth-submit:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(18, 17, 13, 0.12);
+}
+
+.auth-footer-nav {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--bone-200, #DDD5C7);
+  text-align: center;
+}
+
+.auth-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--stone-500, #7C766A);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.auth-back-link:hover {
+  color: var(--ink-950, #12110D);
 }
 
 /* Utilitas */

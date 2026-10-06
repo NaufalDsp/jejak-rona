@@ -16,20 +16,21 @@ const allTags = await getAllPostTags();
   <div class="articles-container">
     <nav class="articles-breadcrumbs" aria-label="Navigasi rekam jejak">
       <a href="/" class="btn-back">
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        <span>Kembali ke Beranda</span>
+        <span class="btn-back__icon" aria-hidden="true">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </span>
+        <span class="btn-back__label">Kembali ke Beranda</span>
       </a>
     </nav>
 
@@ -222,31 +223,54 @@ const allTags = await getAllPostTags();
   .btn-back {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 7px 14px;
-    border: 1px solid var(--sand-400, #c8beaf);
-    border-radius: 2px;
+    gap: 0.625rem;
+    padding: 0.5rem 1.15rem 0.5rem 0.625rem;
+    border: 1.5px solid var(--ink-950, #12110d);
+    border-radius: 999px;
     background: var(--paper-0, #ffffff);
     color: var(--ink-950, #12110d);
-    font-family: var(--font-ui);
-    font-size: 13px;
+    font-family: var(--font-ui, sans-serif);
+    font-size: 0.8125rem;
     font-weight: 500;
+    letter-spacing: 0.04em;
     text-decoration: none;
-    transition: all 160ms var(--ease-out, ease);
+    box-shadow: 0 2px 8px rgba(18, 17, 13, 0.06);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
   }
 
-  .btn-back svg {
-    transition: transform 160ms var(--ease-out, ease);
+  .btn-back__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--sand-200, #eee7dc);
+    color: var(--ink-950, #12110d);
+    transition:
+      transform 0.25s ease,
+      background-color 0.25s ease,
+      color 0.25s ease;
   }
 
   .btn-back:hover {
     background: var(--ink-950, #12110d);
     color: var(--bone-50, #f6f1e9);
     border-color: var(--ink-950, #12110d);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(18, 17, 13, 0.16);
   }
 
-  .btn-back:hover svg {
+  .btn-back:hover .btn-back__icon {
+    background: var(--terracotta-600, #c85a32);
+    color: #ffffff;
     transform: translateX(-3px);
+  }
+
+  .btn-back:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(18, 17, 13, 0.12);
   }
 
   .articles-header {

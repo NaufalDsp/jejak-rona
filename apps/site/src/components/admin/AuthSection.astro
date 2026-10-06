@@ -5,45 +5,89 @@
 
 <section class="auth-container hidden" id="auth-panel" aria-live="polite">
   <div class="auth-box">
-    <h1>Masuk Panel Admin</h1>
-    <p>Gunakan akun staf terverifikasi untuk mengelola konten dan media.</p>
+    <div class="auth-header">
+      <div class="auth-brand-emblem">
+        <img src="/logo-mark.svg" alt="Jejak Rona" width="40" height="40" />
+      </div>
+      <span class="auth-badge">PANEL REDAKSI & ADMINISTRASI</span>
+      <h1 class="auth-title">Ruang Kerja Redaksi</h1>
+      <p class="auth-desc">
+        Masuk dengan kredensial staf terverifikasi untuk mengelola kurasi
+        visual, esai, dan arsip.
+      </p>
+    </div>
 
     <div id="auth-message" class="admin-error-box hidden" aria-live="assertive">
     </div>
 
-    <form id="login-form" novalidate>
+    <form id="login-form" class="auth-form" novalidate>
       <div class="form-group">
-        <label for="email">Alamat Email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autocomplete="email"
-          placeholder="admin@jejakrona.com"
-          required
-        />
+        <label for="email">Alamat Email Staf</label>
+        <div class="input-wrapper">
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="admin@jejakrona.com"
+            required
+          />
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="password">Kata Sandi</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autocomplete="current-password"
-          placeholder="••••••••"
-          required
-        />
+        <div class="form-label-row">
+          <label for="password">Kata Sandi</label>
+          <button class="btn-text-forgot" id="reset-password" type="button"
+            >Lupa sandi?</button
+          >
+        </div>
+        <div class="input-wrapper">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            required
+          />
+        </div>
       </div>
 
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-        <button class="btn-primary" id="login-button" type="submit"
-          >Masuk ke Panel</button
-        >
-        <button class="btn-text" id="reset-password" type="button"
-          >Reset sandi</button
-        >
+      <button class="btn-auth-submit" id="login-button" type="submit">
+        <span>Masuk ke Dashboard</span>
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true">
+          <path
+            d="M3 8h10M9 4l4 4-4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </button>
+
+      <div class="auth-footer-nav">
+        <a href="/" class="auth-back-link">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Kembali ke Beranda Situs</span>
+        </a>
       </div>
     </form>
   </div>
