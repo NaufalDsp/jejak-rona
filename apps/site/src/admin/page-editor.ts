@@ -543,7 +543,7 @@ export function mountPageEditor(client: SupabaseClient, user: User): void {
       heroMediaPickerBtn.type = "button";
       heroMediaPickerBtn.className = "btn-secondary";
       heroMediaPickerBtn.style.margin = "0.25rem 0 0.5rem 0";
-      heroMediaPickerBtn.textContent = "📁 Pilih dari Pustaka Media";
+      heroMediaPickerBtn.textContent = "Pilih dari Pustaka Media";
       heroMediaPickerBtn.onclick = () => {
         openMediaPicker((item) => {
           updateBlock((target) => {
@@ -646,7 +646,7 @@ export function mountPageEditor(client: SupabaseClient, user: User): void {
       imageMediaPickerBtn.type = "button";
       imageMediaPickerBtn.className = "btn-secondary";
       imageMediaPickerBtn.style.margin = "0.25rem 0 0.5rem 0";
-      imageMediaPickerBtn.textContent = "📁 Pilih dari Pustaka Media";
+      imageMediaPickerBtn.textContent = "Pilih dari Pustaka Media";
       imageMediaPickerBtn.onclick = () => {
         openMediaPicker((item) => {
           updateBlock((target) => {
@@ -1100,7 +1100,7 @@ export function mountPageEditor(client: SupabaseClient, user: User): void {
       const res = await publishing.publishPage(current.id);
       if (btn) {
         btn.disabled = false;
-        btn.textContent = "🚀 Terbitkan Halaman";
+        btn.textContent = "Terbitkan Halaman";
       }
 
       if (!res.success) {

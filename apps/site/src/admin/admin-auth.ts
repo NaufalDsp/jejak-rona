@@ -64,8 +64,10 @@ function clearMessage(element: HTMLElement | null): void {
 
 function setStatus(label: string, tone: StatusTone = "ok"): void {
   if (statusText) statusText.textContent = label;
-  if (statusBanner)
+  if (statusBanner) {
     statusBanner.classList.toggle("status-warning", tone === "warn");
+    statusBanner.style.display = label ? "inline-flex" : "none";
+  }
   if (statusDot) {
     statusDot.classList.remove("warning", "alert");
     if (tone === "warn") statusDot.classList.add("warning");
@@ -246,7 +248,7 @@ function renderDashboard(user: User, profile: StaffProfile): void {
     profileOverview.textContent = `Selamat datang, ${profile.name || user.email || "admin"}.`;
   if (roleBadge) roleBadge.textContent = profile.role.toUpperCase();
   clearMessage(authMessage);
-  setStatus("Admin siap");
+  setStatus("");
 }
 
 const supabase: SupabaseClient | null = envConfigured
@@ -275,7 +277,7 @@ async function watchBuildStatus(client: SupabaseClient): Promise<void> {
         } else if (val.state === "failed") {
           setStatus("Build situs gagal", "error");
         } else {
-          setStatus("Situs tayang (Astro)", "ok");
+          setStatus("", "ok");
         }
       }
     } catch {
@@ -405,7 +407,7 @@ async function handleLogout(): Promise<void> {
     return;
   }
   renderLoggedOut();
-  setStatus("Sesi admin selesai");
+  setStatus("");
 }
 
 loginForm?.addEventListener("submit", (event) => void handleLogin(event));
@@ -426,7 +428,7 @@ if (!envConfigured) {
   supabase.auth.onAuthStateChange((event, session) => {
     if (event === "SIGNED_OUT") {
       renderLoggedOut();
-      setStatus("Belum masuk");
+      setStatus("");
     } else if (session) {
       window.setTimeout(() => void ensureRole(session), 0);
     }

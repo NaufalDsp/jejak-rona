@@ -1,6 +1,10 @@
 ---
 import SiteLayout from "../../layouts/SiteLayout.astro";
-import { getPublishedPosts, getAllPostTags } from "../../lib/site-data";
+import {
+  getPublishedPosts,
+  getAllPostTags,
+  resolvePostCover,
+} from "../../lib/site-data";
 
 const posts = await getPublishedPosts();
 const allTags = await getAllPostTags();
@@ -113,10 +117,7 @@ const allTags = await getAllPostTags();
               <a href={`/artikel/${post.slug}`} class="grid-item__link">
                 <div class="grid-item__media">
                   <img
-                    src={
-                      post.coverImageUrl ||
-                      "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80"
-                    }
+                    src={resolvePostCover(post.slug, post.coverImageUrl)}
                     alt={post.title}
                     loading="lazy"
                     decoding="async"

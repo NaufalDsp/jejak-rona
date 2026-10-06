@@ -113,6 +113,44 @@ export interface PublishedPost {
   publishedAt: string;
 }
 
+export function resolvePostCover(
+  slug: string,
+  explicitCover?: string | null,
+): string {
+  // Jika ada cover kustom yang valid dan bukan placeholder lawas yang tidak relevan
+  if (
+    explicitCover &&
+    !explicitCover.includes("photo-1578632767115") &&
+    !explicitCover.includes("photo-1544717305")
+  ) {
+    return explicitCover;
+  }
+
+  // Foto kurasi otentik berlisensi bebas berdasarkan konteks wilayah & topik narasi
+  const normalized = (slug || "").toLowerCase();
+  if (normalized.includes("toba")) {
+    return "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Danau_Toba_pagi_hari.jpg/1280px-Danau_Toba_pagi_hari.jpg";
+  }
+  if (
+    normalized.includes("sumba") ||
+    normalized.includes("tenun") ||
+    normalized.includes("ikat")
+  ) {
+    return "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Tenun_Ikat_Sumba.jpg/1280px-Tenun_Ikat_Sumba.jpg";
+  }
+  if (
+    normalized.includes("wae") ||
+    normalized.includes("rebo") ||
+    normalized.includes("niang") ||
+    normalized.includes("flores")
+  ) {
+    return "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Wae_Rebo_village%2C_Flores_Island%2C_Indonesia%2C_20250824_0753_3029.jpg/1280px-Wae_Rebo_village%2C_Flores_Island%2C_Indonesia%2C_20250824_0753_3029.jpg";
+  }
+
+  // Default: Pemandangan alam Nusantara otentik
+  return "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Hutan_Gunung_Leuser_Aceh.jpg/1280px-Hutan_Gunung_Leuser_Aceh.jpg";
+}
+
 const fallbackPosts: PublishedPost[] = [
   {
     id: "c1111111-1111-4000-8000-000000000001",
@@ -123,7 +161,7 @@ const fallbackPosts: PublishedPost[] = [
     tags: ["Perjalanan", "Nusantara", "Fotografi"],
     readingTimeMinutes: 3,
     coverImageUrl:
-      "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1600&q=80",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Danau_Toba_pagi_hari.jpg/1280px-Danau_Toba_pagi_hari.jpg",
     publishedAt: "2026-10-04T05:30:00Z",
     blocks: [
       {
@@ -151,7 +189,7 @@ const fallbackPosts: PublishedPost[] = [
     tags: ["Budaya", "Kriya", "Tradisi"],
     readingTimeMinutes: 4,
     coverImageUrl:
-      "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1600&q=80",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Tenun_Ikat_Sumba.jpg/1280px-Tenun_Ikat_Sumba.jpg",
     publishedAt: "2026-10-05T08:15:00Z",
     blocks: [
       {
@@ -167,6 +205,35 @@ const fallbackPosts: PublishedPost[] = [
         heading: "Mengikat Ingatan Leluhur",
         content:
           "Menenun bukan sekadar merangkai benang lungsi dan pakan, melainkan mengikat ingatan para leluhur agar tetap hidup dan bermakna di tengah perubahan zaman.",
+      },
+    ],
+  },
+  {
+    id: "c3333333-3333-4000-8000-000000000003",
+    slug: "harmoni-mbaru-niang-wae-rebo",
+    title:
+      "Harmoni Mbaru Niang Wae Rebo: Geometri Kerucut di Balik Kabut Flores",
+    excerpt:
+      "Menyentuh struktur arsitektur vernakular tujuh rumah utama di lembah terpencil Manggarai yang hidup berdampingan dengan awan.",
+    tags: ["Arsitektur", "Nusantara", "Tradisi"],
+    readingTimeMinutes: 5,
+    coverImageUrl:
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Wae_Rebo_village%2C_Flores_Island%2C_Indonesia%2C_20250824_0753_3029.jpg/1280px-Wae_Rebo_village%2C_Flores_Island%2C_Indonesia%2C_20250824_0753_3029.jpg",
+    publishedAt: "2026-10-06T06:00:00Z",
+    blocks: [
+      {
+        id: "blk-waerebo-1",
+        type: "rich_text",
+        heading: "Tujuh Kerucut di Balik Punggung Pegunungan",
+        content:
+          "Di lembah sunyi Manggarai Barat, tujuh rumah kerucut Mbaru Niang berdiri melingkar mengelilingi altar batu compang. Struktur bambu dan atap ijuk lontar ini telah bertahan melintasi generasi sebagai wujud arsitektur yang menyatu sempurna dengan iklim pegunungan tropis.",
+      },
+      {
+        id: "blk-waerebo-2",
+        type: "rich_text",
+        heading: "Filosofi Ruang Vertikal",
+        content:
+          "Lima tingkatan lantai di dalam Mbaru Niang bukan sekadar rancangan fungsional, melainkan cerminan kosmologi masyarakat Wae Rebo yang menempatkan kehidupan manusia di antara bumi dan langit.",
       },
     ],
   },
@@ -201,7 +268,7 @@ export async function getPublishedPosts(): Promise<PublishedPost[]> {
       title: item.title,
       excerpt: item.excerpt || "",
       coverMediaId: item.cover_media_id,
-      coverImageUrl: null,
+      coverImageUrl: resolvePostCover(item.slug, null),
       tags: item.tags || [],
       readingTimeMinutes: item.reading_time_minutes || 1,
       blocks: item.published?.blocks || [],

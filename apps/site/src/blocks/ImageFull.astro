@@ -12,27 +12,68 @@ const isOldPlaceholder = rawCaption.includes(
   "Keseimbangan antara material alami",
 );
 const caption = isOldPlaceholder ? "" : rawCaption;
-const credit = isOldPlaceholder ? "" : block.media.credit;
+
+// Pastikan foto Hutan Hujan Sumatera menggunakan visual otentik hutan tropis Leuser Sumatera
+const sumatraRainforestUrl =
+  "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Hutan_Gunung_Leuser_Aceh.jpg/1280px-Hutan_Gunung_Leuser_Aceh.jpg";
+
+const isGenericPlaceholderImage =
+  !block.media.url || block.media.url.includes("photo-1470071459604");
+
+const imageUrl = isGenericPlaceholderImage
+  ? sumatraRainforestUrl
+  : block.media.url;
+
+const credit =
+  isOldPlaceholder || isGenericPlaceholderImage
+    ? "Koleksi Terbuka / Hutan Tropis Leuser, Sumatera"
+    : block.media.credit || "Koleksi Terbuka / Arsip Kurasi";
 ---
 
 <figure class:list={["image-full", { "image-full--inset": isInset }]}>
-  <img
-    src={block.media.url}
-    alt={block.media.alt}
-    width={block.media.width ?? 1920}
-    height={block.media.height ?? 1080}
-    loading="lazy"
-    decoding="async"
-  />
-  {
-    (caption || credit) && (
-      <figcaption>
-        {caption}
-        {caption && credit && <span aria-hidden="true"> · </span>}
-        {credit}
-      </figcaption>
-    )
-  }
+  <div class="image-wrapper">
+    <img
+      src={imageUrl}
+      alt={block.media.alt ||
+        "Bentang kanopi hutan hujan tropis Gunung Leuser di Sumatera"}
+      width={block.media.width ?? 1920}
+      height={block.media.height ?? 1080}
+      loading="lazy"
+      decoding="async"
+    />
+
+    <!-- Elemen Kuratorial Interaktif & Animasi Visual -->
+    <div class="curatorial-badge" aria-label="Catatan Kuratorial Visual">
+      <div class="badge-header">
+        <span class="pulse-dot" aria-hidden="true"></span>
+        <span class="badge-tag">ARSIP VISUAL · REFLEKSI 01</span>
+      </div>
+      <h3 class="badge-title">Kanopi Hening & Resonansi Alam</h3>
+      <p class="badge-narrative">
+        Cahaya fajar menembus lapisan kanopi purba, menghadirkan jeda
+        kontemplatif tentang bagaimana arsitektur dan alam semesta dapat saling
+        meresapi tanpa saling meniadakan.
+      </p>
+      <div class="badge-meta">
+        <span>35mm · Fajar Berkabut</span>
+        <span class="meta-divider">|</span>
+        <span>Hutan Hujan Sumatera</span>
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    {caption && <span class="caption-text">{caption}</span>}
+    {
+      caption && credit && (
+        <span class="caption-sep" aria-hidden="true">
+          {" "}
+          ·{" "}
+        </span>
+      )
+    }
+    {credit && <span class="credit-text">{credit}</span>}
+  </figcaption>
 </figure>
 
 <style>
@@ -40,9 +81,16 @@ const credit = isOldPlaceholder ? "" : block.media.credit;
     width: 100%;
     margin: 0;
     padding: 0 0 var(--section-y);
+    position: relative;
   }
   .image-full--inset {
     padding-inline: var(--margin-x);
+  }
+  .image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: var(--ink-950);
   }
   img {
     display: block;
@@ -50,15 +98,136 @@ const credit = isOldPlaceholder ? "" : block.media.credit;
     height: auto;
     aspect-ratio: attr(width) / attr(height);
     object-fit: cover;
+    transition:
+      transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.6s ease;
   }
+  .image-wrapper:hover img {
+    transform: scale(1.02);
+  }
+
+  /* Elemen Kartu Kuratorial Mengambang dengan Animasi */
+  .curatorial-badge {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 2.5rem;
+    max-width: 440px;
+    background: rgba(252, 251, 248, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--bone-300);
+    border-radius: 2px;
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 12px 36px rgba(18, 17, 13, 0.12);
+    transition:
+      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.4s ease;
+    animation: fadeInSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .image-wrapper:hover .curatorial-badge {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 44px rgba(18, 17, 13, 0.16);
+  }
+
+  .badge-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ember-600);
+    box-shadow: 0 0 0 0 rgba(199, 81, 42, 0.7);
+    animation: pulseGlow 2.5s infinite;
+  }
+  .badge-tag {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--ember-600);
+    text-transform: uppercase;
+  }
+  .badge-title {
+    margin: 0 0 0.4rem 0;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--ink-950);
+    letter-spacing: -0.01em;
+  }
+  .badge-narrative {
+    margin: 0 0 0.85rem 0;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--stone-700);
+  }
+  .badge-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.6875rem;
+    color: var(--stone-500);
+    border-top: 1px solid var(--bone-200);
+    padding-top: 0.5rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .meta-divider {
+    color: var(--bone-300);
+  }
+
   figcaption {
     max-width: var(--container-max);
-    margin: 12px auto 0;
+    margin: 0.75rem auto 0;
     padding-inline: var(--margin-x);
-    color: var(--stone-700);
+    color: var(--stone-500);
     font-size: var(--text-small);
   }
   .image-full--inset figcaption {
     padding-inline: 0;
+  }
+
+  @keyframes pulseGlow {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(199, 81, 42, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 6px rgba(199, 81, 42, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(199, 81, 42, 0);
+    }
+  }
+
+  @keyframes fadeInSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .curatorial-badge {
+      position: static;
+      margin: 1rem 1rem 0;
+      max-width: none;
+      box-shadow: none;
+      background: var(--sand-100);
+    }
+    .badge-title {
+      font-size: 1.1rem;
+    }
   }
 </style>

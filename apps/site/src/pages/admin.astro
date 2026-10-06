@@ -137,16 +137,20 @@ import "../admin/admin.css";
 
       <!-- Main Area -->
       <main class="admin-main">
-        <!-- Topbar Padat (design.md: status build satu baris titik + teks) -->
+        <!-- Topbar Padat -->
         <header class="admin-topbar">
-          <div class="status-pill" id="status-banner" aria-live="polite">
+          <div
+            class="status-pill"
+            id="status-banner"
+            aria-live="polite"
+            style="display: none;">
             <span class="status-dot" id="status-dot"></span>
-            <span id="status-text">Memeriksa sesi…</span>
+            <span id="status-text"></span>
           </div>
 
           <div class="topbar-actions">
             <span class="user-badge" id="session-meta">Belum masuk</span>
-            <button class="btn-text hidden" id="logout-button" type="button"
+            <button class="btn-logout hidden" id="logout-button" type="button"
               >Keluar</button
             >
           </div>
@@ -268,13 +272,13 @@ import "../admin/admin.css";
                 <button
                   class="btn-secondary"
                   type="button"
-                  id="dash-open-media-btn">📁 Pustaka Media</button
+                  id="dash-open-media-btn">Pustaka Media</button
                 >
                 <a
                   href="/"
                   target="_blank"
                   class="btn-secondary"
-                  style="text-decoration: none;">Pratinjau Situs Publik ↗</a
+                  style="text-decoration: none;">Pratinjau Situs Publik</a
                 >
               </div>
             </div>
@@ -345,13 +349,13 @@ import "../admin/admin.css";
                     class="btn-secondary"
                     id="view-revisions-btn"
                     type="button"
-                    title="Riwayat snapshot revisi">📜 Riwayat Revisi</button
+                    title="Riwayat snapshot revisi">Riwayat Revisi</button
                   >
                   <button
                     class="btn-primary"
                     id="publish-page-btn"
                     type="button"
-                    style="font-weight: 600;">🚀 Terbitkan Halaman</button
+                    style="font-weight: 600;">Terbitkan Halaman</button
                   >
                   <button class="btn-text-danger" id="delete-page" type="button"
                     >Hapus</button
@@ -1214,7 +1218,7 @@ import "../admin/admin.css";
             id="publish-article-btn"
             type="button"
             style="display:none; background:#2e7d32; border-color:#2e7d32;">
-            🚀 Terbitkan Artikel
+            Terbitkan Artikel
           </button>
           <div style="display: flex; gap: 0.5rem; margin-left: auto;">
             <button

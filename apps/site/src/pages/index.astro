@@ -3,7 +3,7 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import BlockRenderer from "../blocks/BlockRenderer.astro";
 import { GetPublishedPageUseCase } from "../application/use-cases/get-published-page.use-case.js";
 import { SupabasePageRepository } from "../infrastructure/supabase/supabase-page.repository.js";
-import { getPublishedPosts } from "../lib/site-data";
+import { getPublishedPosts, resolvePostCover } from "../lib/site-data";
 
 const pages = new GetPublishedPageUseCase(new SupabasePageRepository());
 const page = await pages.executeHome();
@@ -44,7 +44,7 @@ const heroImage =
               <h2 class="home-section-title">Cerita dari Penjuru Kepulauan</h2>
             </div>
             <a href="/artikel" class="home-see-all-link">
-              Jelajahi Seluruh Arsip <span>→</span>
+              Jelajahi Seluruh Arsip
             </a>
           </header>
 
@@ -63,10 +63,7 @@ const heroImage =
                   <a href={`/artikel/${post.slug}`} class="featured-card__link">
                     <div class="featured-card__media">
                       <img
-                        src={
-                          post.coverImageUrl ||
-                          "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80"
-                        }
+                        src={resolvePostCover(post.slug, post.coverImageUrl)}
                         alt={post.title}
                         loading="lazy"
                         decoding="async"

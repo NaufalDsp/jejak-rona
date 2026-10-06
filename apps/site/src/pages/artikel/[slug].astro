@@ -4,6 +4,7 @@ import BlockRenderer from "../../blocks/BlockRenderer.astro";
 import {
   getPublishedPosts,
   getRelatedPosts,
+  resolvePostCover,
   type PublishedPost,
 } from "../../lib/site-data";
 
@@ -28,9 +29,7 @@ const formattedDate = new Date(post.publishedAt).toLocaleDateString("id-ID", {
   year: "numeric",
 });
 
-const coverImg =
-  post.coverImageUrl ||
-  "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1600&q=80";
+const coverImg = resolvePostCover(post.slug, post.coverImageUrl);
 
 const articleSchema = {
   "@context": "https://schema.org",
