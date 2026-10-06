@@ -64,9 +64,12 @@ const scrim = {
   <script>
     const video = document.querySelector<HTMLVideoElement>("[data-hero-video]");
     const toggle = document.querySelector<HTMLButtonElement>("[data-video-toggle]");
+    const connection = "connection" in navigator
+      ? (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection
+      : undefined;
     const shouldAvoidMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      || navigator.connection?.saveData
-      || ["slow-2g", "2g"].includes(navigator.connection?.effectiveType ?? "");
+      || Boolean(connection?.saveData)
+      || ["slow-2g", "2g"].includes(connection?.effectiveType ?? "");
 
     if (video && toggle && !shouldAvoidMotion) {
       video.addEventListener("canplay", () => { toggle.hidden = false; }, { once: true });

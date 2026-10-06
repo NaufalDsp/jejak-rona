@@ -61,7 +61,7 @@ async function runTests() {
     "getPublishedHome() mengembalikan halaman beranda",
   );
   assert(
-    home?.blocks.some((b) => b.type === "hero_media"),
+    home !== null && home.blocks.some((b) => b.type === "hero_media"),
     "Beranda terbit memiliki blok hero_media",
   );
 
