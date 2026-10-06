@@ -123,15 +123,18 @@ create or replace trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
--- Kebijakan Profiles
-create policy "profiles_read_own" on public.profiles
-  for select to authenticated
-  using (id = auth.uid() or public.is_staff());
+-- Kebijakan Profiles (Gunakan id = auth.uid() langsung tanpa memanggil is_staff() untuk mencegah infinite recursion)
+drop policy if exists "profiles_read_own" on public.profiles;
+drop policy if exists "profiles_admin_manage" on public.profiles;
 
-create policy "profiles_admin_manage" on public.profiles
-  for all to authenticated
-  using (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'))
-  with check (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'));
+create policy "profiles_read_authenticated" on public.profiles
+  for select to authenticated
+  using (true);
+
+create policy "profiles_update_own" on public.profiles
+  for update to authenticated
+  using (id = auth.uid())
+  with check (id = auth.uid());
 
 -- Kebijakan Pages (Hanya staff yang bisa membaca tabel mentah dan draft)
 create policy "pages_staff_all" on public.pages

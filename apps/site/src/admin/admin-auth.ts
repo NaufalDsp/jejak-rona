@@ -5,32 +5,30 @@ import {
   type User,
 } from "@supabase/supabase-js";
 import { mountPageEditor } from "./page-editor.js";
+import { mountMediaManager } from "./media-manager.js";
 
 type StaffProfile = { role: "admin" | "editor"; name: string };
 type StatusTone = "ok" | "warn" | "error";
 
-function requiredElement<T extends HTMLElement>(id: string): T {
-  const element = document.getElementById(id);
-  if (!element) throw new Error(`Elemen admin #${id} tidak ditemukan.`);
-  return element as T;
+function getEl<T extends HTMLElement>(id: string): T | null {
+  return document.getElementById(id) as T | null;
 }
 
-const statusText = requiredElement<HTMLSpanElement>("status-text");
-const statusDot = requiredElement<HTMLSpanElement>("status-dot");
-const statusBanner = requiredElement<HTMLDivElement>("status-banner");
-const authPanel = requiredElement<HTMLElement>("auth-panel");
-const dashboard = requiredElement<HTMLElement>("dashboard");
-const sessionMeta = requiredElement<HTMLSpanElement>("session-meta");
-const logoutButton = requiredElement<HTMLButtonElement>("logout-button");
-const loginForm = requiredElement<HTMLFormElement>("login-form");
-const emailInput = requiredElement<HTMLInputElement>("email");
-const passwordInput = requiredElement<HTMLInputElement>("password");
-const authMessage = requiredElement<HTMLDivElement>("auth-message");
-const accessMessage = requiredElement<HTMLDivElement>("access-message");
-const profileOverview =
-  requiredElement<HTMLParagraphElement>("profile-overview");
-const roleBadge = requiredElement<HTMLSpanElement>("role-badge");
-const siteUrl = requiredElement<HTMLSpanElement>("site-url");
+const statusText = getEl<HTMLSpanElement>("status-text");
+const statusDot = getEl<HTMLSpanElement>("status-dot");
+const statusBanner = getEl<HTMLDivElement>("status-banner");
+const authPanel = getEl<HTMLElement>("auth-panel");
+const dashboard = getEl<HTMLElement>("dashboard");
+const pageEditor = getEl<HTMLElement>("page-editor");
+const mediaPanel = getEl<HTMLElement>("media-panel");
+const sessionMeta = getEl<HTMLSpanElement>("session-meta");
+const logoutButton = getEl<HTMLButtonElement>("logout-button");
+const loginForm = getEl<HTMLFormElement>("login-form");
+const emailInput = getEl<HTMLInputElement>("email");
+const passwordInput = getEl<HTMLInputElement>("password");
+const authMessage = getEl<HTMLDivElement>("auth-message");
+const profileOverview = getEl<HTMLHeadingElement>("profile-overview");
+const roleBadge = getEl<HTMLSpanElement>("role-badge");
 
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
 const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? "";
@@ -42,53 +40,165 @@ const envConfigured = Boolean(
 );
 
 function showMessage(
-  element: HTMLElement,
+  element: HTMLElement | null,
   text: string,
   kind: "success" | "error" = "error",
 ): void {
+  if (!element) return;
   element.textContent = text;
   element.classList.remove("success", "error");
   element.classList.add(kind, "visible");
 }
 
-function clearMessage(element: HTMLElement): void {
+function clearMessage(element: HTMLElement | null): void {
+  if (!element) return;
   element.textContent = "";
   element.classList.remove("visible", "success", "error");
 }
 
 function setStatus(label: string, tone: StatusTone = "ok"): void {
-  statusText.textContent = label;
-  statusBanner.classList.toggle("status-warning", tone === "warn");
-  statusDot.classList.remove("warning", "alert");
-  if (tone === "warn") statusDot.classList.add("warning");
-  if (tone === "error") statusDot.classList.add("alert");
+  if (statusText) statusText.textContent = label;
+  if (statusBanner)
+    statusBanner.classList.toggle("status-warning", tone === "warn");
+  if (statusDot) {
+    statusDot.classList.remove("warning", "alert");
+    if (tone === "warn") statusDot.classList.add("warning");
+    if (tone === "error") statusDot.classList.add("alert");
+  }
+}
+
+function switchView(viewName: "dashboard" | "pages" | "media"): void {
+  const navItems =
+    document.querySelectorAll<HTMLButtonElement>("[data-admin-view]");
+  navItems.forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.adminView === viewName);
+  });
+
+  if (dashboard) dashboard.classList.toggle("hidden", viewName !== "dashboard");
+  if (pageEditor) pageEditor.classList.toggle("hidden", viewName !== "pages");
+  if (mediaPanel) mediaPanel.classList.toggle("hidden", viewName !== "media");
+}
+
+function setupNavigation(): void {
+  const navItems =
+    document.querySelectorAll<HTMLButtonElement>("[data-admin-view]");
+  navItems.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const view = btn.dataset.adminView as "dashboard" | "pages" | "media";
+      if (view) switchView(view);
+    });
+  });
+
+  getEl<HTMLButtonElement>("dash-create-page-btn")?.addEventListener(
+    "click",
+    () => {
+      switchView("pages");
+      getEl<HTMLButtonElement>("create-page")?.click();
+    },
+  );
+
+  getEl<HTMLButtonElement>("dash-open-media-btn")?.addEventListener(
+    "click",
+    () => {
+      switchView("media");
+    },
+  );
 }
 
 function renderLoggedOut(): void {
-  authPanel.classList.remove("hidden");
-  dashboard.classList.add("hidden");
-  logoutButton.classList.add("hidden");
-  sessionMeta.textContent = "Belum masuk";
-  profileOverview.textContent = "Masuk untuk mengakses dashboard admin.";
-  clearMessage(accessMessage);
+  authPanel?.classList.remove("hidden");
+  dashboard?.classList.add("hidden");
+  pageEditor?.classList.add("hidden");
+  mediaPanel?.classList.add("hidden");
+  logoutButton?.classList.add("hidden");
+  if (sessionMeta) sessionMeta.textContent = "Belum masuk";
+  if (profileOverview)
+    profileOverview.textContent = "Masuk untuk mengakses dashboard admin.";
 }
 
 function renderUnauthorized(message: string): void {
-  authPanel.classList.remove("hidden");
-  dashboard.classList.add("hidden");
-  logoutButton.classList.remove("hidden");
-  sessionMeta.textContent = "Sesi aktif";
+  authPanel?.classList.remove("hidden");
+  dashboard?.classList.add("hidden");
+  pageEditor?.classList.add("hidden");
+  mediaPanel?.classList.add("hidden");
+  logoutButton?.classList.remove("hidden");
+  if (sessionMeta) sessionMeta.textContent = "Sesi aktif";
   showMessage(authMessage, message);
   setStatus("Akses ditolak, role tidak valid", "warn");
 }
 
+async function refreshDashboardStats(client: SupabaseClient): Promise<void> {
+  try {
+    const { data: pages } = await client
+      .from("pages")
+      .select("id, slug, title, status, is_home, updated_at");
+    const { count: mediaCount } = await client
+      .from("media")
+      .select("id", { count: "exact", head: true });
+
+    if (pages) {
+      const published = pages.filter((p) => p.status === "published").length;
+      const draft = pages.filter((p) => p.status === "draft").length;
+
+      const pubEl = getEl("stat-published-count");
+      const draftEl = getEl("stat-draft-count");
+      const mediaEl = getEl("stat-media-count");
+      if (pubEl) pubEl.textContent = String(published);
+      if (draftEl) draftEl.textContent = String(draft);
+      if (mediaEl) mediaEl.textContent = String(mediaCount ?? 0);
+
+      const tableBody = getEl("dash-pages-table");
+      if (tableBody) {
+        tableBody.replaceChildren();
+        if (pages.length === 0) {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td colspan="5" class="muted" style="text-align: center; padding: 1.5rem;">Belum ada halaman.</td>`;
+          tableBody.append(row);
+        } else {
+          for (const page of pages) {
+            const tr = document.createElement("tr");
+            const badgeClass =
+              page.status === "published" ? "badge-published" : "badge-draft";
+            const roleLabel = page.is_home ? "Beranda" : "Standar";
+            tr.innerHTML = `
+              <td><strong>${page.title}</strong></td>
+              <td><code>/${page.slug}</code></td>
+              <td><span class="badge ${page.is_home ? "badge-published" : "badge-draft"}">${roleLabel}</span></td>
+              <td><span class="badge ${badgeClass}">${page.status.toUpperCase()}</span></td>
+              <td style="text-align: right;">
+                <button class="btn-secondary" style="font-size: 11px; padding: 2px 8px;" data-edit-page-id="${page.id}">Sunting</button>
+              </td>
+            `;
+
+            tr.querySelector(
+              `[data-edit-page-id="${page.id}"]`,
+            )?.addEventListener("click", () => {
+              switchView("pages");
+              const pageBtn = document.querySelector<HTMLButtonElement>(
+                `[data-page-id="${page.id}"]`,
+              );
+              pageBtn?.click();
+            });
+
+            tableBody.append(tr);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Gagal memuat statistik dashboard:", err);
+  }
+}
+
 function renderDashboard(user: User, profile: StaffProfile): void {
-  authPanel.classList.add("hidden");
-  dashboard.classList.remove("hidden");
-  logoutButton.classList.remove("hidden");
-  sessionMeta.textContent = user.email || "Admin terautentikasi";
-  profileOverview.textContent = `Selamat datang, ${profile.name || user.email || "admin"}.`;
-  roleBadge.textContent = profile.role;
+  authPanel?.classList.add("hidden");
+  dashboard?.classList.remove("hidden");
+  logoutButton?.classList.remove("hidden");
+  if (sessionMeta)
+    sessionMeta.textContent = user.email || "Admin terautentikasi";
+  if (profileOverview)
+    profileOverview.textContent = `Selamat datang, ${profile.name || user.email || "admin"}.`;
+  if (roleBadge) roleBadge.textContent = profile.role.toUpperCase();
   clearMessage(authMessage);
   setStatus("Admin siap");
 }
@@ -102,6 +212,8 @@ const supabase: SupabaseClient | null = envConfigured
       },
     })
   : null;
+
+let isMounted = false;
 
 async function ensureRole(session: Session | null): Promise<void> {
   if (!session?.user || !supabase) {
@@ -131,13 +243,20 @@ async function ensureRole(session: Session | null): Promise<void> {
   }
 
   renderDashboard(session.user, profile);
-  mountPageEditor(supabase, session.user);
+
+  if (!isMounted) {
+    isMounted = true;
+    setupNavigation();
+    mountPageEditor(supabase, session.user);
+    mountMediaManager(supabase, session.user);
+    void refreshDashboardStats(supabase);
+  }
 }
 
 async function handleLogin(event: SubmitEvent): Promise<void> {
   event.preventDefault();
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
+  const email = emailInput?.value.trim() ?? "";
+  const password = passwordInput?.value ?? "";
 
   if (!supabase) {
     showMessage(
@@ -169,7 +288,7 @@ async function handleLogin(event: SubmitEvent): Promise<void> {
 }
 
 async function handleReset(): Promise<void> {
-  const email = emailInput.value.trim();
+  const email = emailInput?.value.trim() ?? "";
   if (!supabase) {
     showMessage(
       authMessage,
@@ -212,13 +331,12 @@ async function handleLogout(): Promise<void> {
   setStatus("Sesi admin selesai");
 }
 
-loginForm.addEventListener("submit", (event) => void handleLogin(event));
-requiredElement<HTMLButtonElement>("reset-password").addEventListener(
+loginForm?.addEventListener("submit", (event) => void handleLogin(event));
+getEl<HTMLButtonElement>("reset-password")?.addEventListener(
   "click",
   () => void handleReset(),
 );
-logoutButton.addEventListener("click", () => void handleLogout());
-siteUrl.textContent = window.location.origin;
+logoutButton?.addEventListener("click", () => void handleLogout());
 
 if (!envConfigured) {
   setStatus("Konfigurasi Supabase belum siap", "warn");

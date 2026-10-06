@@ -5,6 +5,7 @@ import {
   type Page,
 } from "@jejak-rona/schema";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
+import { openMediaPicker } from "./media-manager.js";
 
 interface PageRow {
   id: string;
@@ -536,6 +537,29 @@ export function mountPageEditor(client: SupabaseClient, user: User): void {
             target.media.kind = value as "image" | "video";
         }),
       );
+
+      const heroMediaPickerBtn = document.createElement("button");
+      heroMediaPickerBtn.type = "button";
+      heroMediaPickerBtn.className = "btn-secondary";
+      heroMediaPickerBtn.style.margin = "0.25rem 0 0.5rem 0";
+      heroMediaPickerBtn.textContent = "📁 Pilih dari Pustaka Media";
+      heroMediaPickerBtn.onclick = () => {
+        openMediaPicker((item) => {
+          updateBlock((target) => {
+            if (target.type === "hero_media") {
+              target.media.url = item.url;
+              target.media.filename = item.filename;
+              target.media.mimeType = item.mimeType;
+              target.media.alt = item.alt;
+              target.media.kind = item.kind;
+              if (item.posterUrl) target.poster = item.posterUrl;
+            }
+          });
+          renderBlockFields();
+        });
+      };
+      fields.append(heroMediaPickerBtn);
+
       addField(
         "URL media",
         block.media.url,
@@ -616,6 +640,27 @@ export function mountPageEditor(client: SupabaseClient, user: User): void {
             target.variant = value as "full" | "inset";
         }),
       );
+
+      const imageMediaPickerBtn = document.createElement("button");
+      imageMediaPickerBtn.type = "button";
+      imageMediaPickerBtn.className = "btn-secondary";
+      imageMediaPickerBtn.style.margin = "0.25rem 0 0.5rem 0";
+      imageMediaPickerBtn.textContent = "📁 Pilih dari Pustaka Media";
+      imageMediaPickerBtn.onclick = () => {
+        openMediaPicker((item) => {
+          updateBlock((target) => {
+            if (target.type === "image_full") {
+              target.media.url = item.url;
+              target.media.filename = item.filename;
+              target.media.mimeType = item.mimeType;
+              target.media.alt = item.alt;
+            }
+          });
+          renderBlockFields();
+        });
+      };
+      fields.append(imageMediaPickerBtn);
+
       addField(
         "URL gambar",
         block.media.url,

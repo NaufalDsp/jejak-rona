@@ -1,0 +1,755 @@
+/* ==============================================================================
+ * Panel Admin — Jejak Rona (Design System Refined)
+ * Sesuai panduan design.md Bagian 9: Padat, Jelas, Netral, Bukan Etalase.
+ * ============================================================================== */
+
+:root {
+  /* Warna Inti (design.md) */
+  --ink-950: #12110D;
+  --ink-900: #1B1A15;
+  --ink-700: #3A382F;
+  --bone-50: #F6F1E9;
+  --bone-100: #ECE5D9;
+  --bone-200: #DDD5C7;
+  --bone-300: #CFC7B8;
+  --stone-500: #7C766A;
+  --stone-700: #4D493F;
+  --ember-600: #B5522B;
+  --ember-700: #964220;
+  --grass-600: #2D6D4F;
+  --danger-500: #B42318;
+  --paper-0: #FFFFFF;
+
+  /* Tipografi */
+  --font-ui: "Hanken Grotesk", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--bone-50);
+  color: var(--ink-950);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Aksesibilitas: Cincin fokus seragam */
+:focus-visible {
+  outline: 2px solid var(--ember-600) !important;
+  outline-offset: 2px !important;
+}
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+/* ==============================================================================
+ * LAYOUT SHELL (Sidebar + Topbar + Content)
+ * ============================================================================== */
+.admin-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar Ramping & Padat */
+.admin-sidebar {
+  width: 220px;
+  background: var(--ink-950);
+  color: var(--bone-50);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  border-right: 1px solid var(--ink-900);
+}
+
+.admin-brand {
+  padding: 1.25rem 1.25rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border-bottom: 1px solid var(--ink-900);
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: var(--ember-600);
+  color: var(--bone-50);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  border-radius: 2px;
+}
+
+.brand-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bone-50);
+}
+
+.admin-nav {
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--bone-300);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: color 140ms ease, background 140ms ease;
+}
+
+.admin-nav-item:hover:not(:disabled) {
+  color: var(--bone-50);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.admin-nav-item.active {
+  color: var(--bone-50);
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--ember-600);
+}
+
+.admin-nav-item:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.sidebar-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--ink-900);
+  font-size: 11px;
+  color: var(--stone-500);
+}
+
+/* Konten Utama & Topbar */
+.admin-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-topbar {
+  height: 52px;
+  background: var(--paper-0);
+  border-bottom: 1px solid var(--bone-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  gap: 1rem;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 12px;
+  color: var(--stone-700);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--grass-600);
+  display: inline-block;
+}
+
+.status-dot.warning {
+  background: var(--ember-600);
+}
+
+.status-dot.alert {
+  background: var(--danger-500);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-badge {
+  font-size: 12px;
+  color: var(--stone-700);
+}
+
+/* ==============================================================================
+ * TOMBOL & KOMPONEN UI DASAR
+ * ============================================================================== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  background: var(--ink-950);
+  color: var(--bone-50);
+  border: 1px solid var(--ink-950);
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 140ms ease;
+}
+
+.btn-primary:hover {
+  background: var(--ink-700);
+  border-color: var(--ink-700);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  background: var(--paper-0);
+  color: var(--ink-950);
+  border: 1px solid var(--bone-300);
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 140ms ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--ink-950);
+}
+
+.btn-primary-sm {
+  padding: 0.3rem 0.6rem;
+  background: var(--ink-950);
+  color: var(--bone-50);
+  border: 0;
+  border-radius: 2px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-text {
+  padding: 0.3rem 0.5rem;
+  background: transparent;
+  color: var(--stone-700);
+  border: 0;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.btn-text:hover {
+  color: var(--ink-950);
+}
+
+.btn-text-danger {
+  padding: 0.3rem 0.5rem;
+  background: transparent;
+  color: var(--danger-500);
+  border: 0;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-text-danger:hover {
+  text-decoration: underline;
+}
+
+/* ==============================================================================
+ * KONTEN HALAMAN (Container & Cards)
+ * ============================================================================== */
+.admin-content {
+  padding: 1.5rem;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Section Card */
+.admin-card {
+  background: var(--paper-0);
+  border: 1px solid var(--bone-200);
+  border-radius: 2px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--bone-100);
+}
+
+.admin-card__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-950);
+}
+
+/* Dashboard Metrics Grid (Padat & Jelas, Bukan Kartu AI Balon) */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--bone-200);
+  border: 1px solid var(--bone-200);
+  border-radius: 2px;
+  margin-bottom: 1.5rem;
+}
+
+.metric-cell {
+  background: var(--paper-0);
+  padding: 1.1rem 1.25rem;
+}
+
+.metric-cell__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--stone-500);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.metric-cell__value {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--ink-950);
+  font-feature-settings: "tnum";
+  line-height: 1;
+}
+
+.metric-cell__sub {
+  font-size: 12px;
+  color: var(--stone-700);
+  margin-top: 0.35rem;
+}
+
+/* Aksi Cepat Dashboard */
+.quick-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Tabel Admin Bersih */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--stone-500);
+  border-bottom: 1px solid var(--bone-200);
+  font-weight: 600;
+}
+
+.admin-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--bone-100);
+  color: var(--ink-950);
+}
+
+.admin-table tr:hover td {
+  background: var(--bone-50);
+}
+
+/* Status Badges */
+.badge {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-published {
+  background: #E8F3ED;
+  color: var(--grass-600);
+}
+
+.badge-draft {
+  background: var(--bone-100);
+  color: var(--stone-700);
+}
+
+.badge-home {
+  background: #F8EDE6;
+  color: var(--ember-600);
+}
+
+/* ==============================================================================
+ * TAHAP 7: PUSTAKA MEDIA (Gallery Grid & Drag and Drop)
+ * ============================================================================== */
+.media-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.media-filters {
+  display: flex;
+  gap: 2px;
+  background: var(--bone-100);
+  padding: 2px;
+  border-radius: 2px;
+}
+
+.media-tab {
+  padding: 0.35rem 0.75rem;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.media-tab.active {
+  background: var(--paper-0);
+  color: var(--ink-950);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+.media-dropzone {
+  border: 1px dashed var(--bone-300);
+  background: var(--paper-0);
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.25rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.media-dropzone.dragover {
+  border-color: var(--ember-600);
+  background: #FAF6F2;
+}
+
+.media-dropzone p {
+  margin: 0 0 0.25rem;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.media-card {
+  background: var(--paper-0);
+  border: 1px solid var(--bone-200);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.media-card__preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/10;
+  background: var(--ink-900);
+  overflow: hidden;
+}
+
+.media-card__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.media-card__video-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.media-card__kind {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+}
+
+.media-card__meta {
+  padding: 0.6rem 0.75rem;
+  flex: 1;
+}
+
+.media-card__name {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.media-card__sub {
+  font-size: 11px;
+  color: var(--stone-500);
+  margin-top: 2px;
+}
+
+.media-card__actions {
+  padding: 0.4rem 0.75rem;
+  border-top: 1px solid var(--bone-100);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ==============================================================================
+ * TAHAP 7: PEMILIH TITIK FOKUS INTERAKTIF (Focal Point Picker)
+ * ============================================================================== */
+.focal-dialog {
+  width: min(920px, calc(100vw - 2rem));
+  max-height: 90vh;
+  border: 1px solid var(--bone-300);
+  background: var(--paper-0);
+  padding: 1.5rem;
+  border-radius: 2px;
+}
+
+.focal-dialog::backdrop {
+  background: rgba(18, 17, 13, 0.6);
+}
+
+.focal-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.focal-canvas-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/10;
+  background: var(--ink-900);
+  user-select: none;
+  cursor: crosshair;
+  overflow: hidden;
+  border: 1px solid var(--bone-200);
+}
+
+.focal-canvas-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.focal-target-marker {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(0,0,0,0.8);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: transform 60ms ease;
+}
+
+.focal-target-marker::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: var(--ember-600);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.focal-previews {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.preview-box {
+  border: 1px solid var(--bone-200);
+  background: var(--bone-50);
+  padding: 0.75rem;
+}
+
+.preview-box__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--stone-500);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.preview-desktop-crop {
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: var(--ink-900);
+}
+
+.preview-desktop-crop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-mobile-crop {
+  width: 110px;
+  aspect-ratio: 9/16;
+  overflow: hidden;
+  background: var(--ink-900);
+  margin: 0 auto;
+}
+
+.preview-mobile-crop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==============================================================================
+ * MODAL MEDIA PICKER DALAM EDITOR BLOK
+ * ============================================================================== */
+.picker-dialog {
+  width: min(840px, calc(100vw - 2rem));
+  max-height: 80vh;
+  border: 1px solid var(--bone-300);
+  background: var(--paper-0);
+  padding: 1.5rem;
+  border-radius: 2px;
+}
+
+.picker-dialog::backdrop {
+  background: rgba(18, 17, 13, 0.6);
+}
+
+/* Auth Card Modern (Ganti Tampilan AI Slop) */
+.auth-container {
+  min-height: calc(100vh - 52px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 380px;
+  background: var(--paper-0);
+  border: 1px solid var(--bone-200);
+  border-radius: 2px;
+  padding: 2rem;
+}
+
+.auth-box h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.auth-box p {
+  margin: 0 0 1.5rem;
+  color: var(--stone-500);
+  font-size: 13px;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--ink-950);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--bone-300);
+  border-radius: 2px;
+  background: var(--paper-0);
+  font-size: 13px;
+}
+
+.form-group input:focus {
+  border-color: var(--ink-950);
+}
+
+/* Utilitas */
+.hidden { display: none !important; }
+.muted { color: var(--stone-500); }
+.admin-loading { padding: 2rem; text-align: center; color: var(--stone-500); font-size: 13px; }
+.admin-error-box { padding: 0.75rem 1rem; background: #FDF2F2; border: 1px solid #F8D7DA; color: var(--danger-500); font-size: 12px; margin-bottom: 1rem; }
+.admin-success-box { padding: 0.75rem 1rem; background: #F0FDF4; border: 1px solid #DCFCE7; color: var(--grass-600); font-size: 12px; margin-bottom: 1rem; }
