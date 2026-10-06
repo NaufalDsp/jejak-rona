@@ -51,15 +51,23 @@ function showMessage(
   kind: "success" | "error" = "error",
 ): void {
   if (!element) return;
-  element.textContent = text;
+  element.classList.remove("hidden");
   element.classList.remove("success", "error");
   element.classList.add(kind, "visible");
+
+  const icon =
+    kind === "error"
+      ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:1px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`
+      : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:1px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+
+  element.innerHTML = `${icon}<span>${text}</span>`;
 }
 
 function clearMessage(element: HTMLElement | null): void {
   if (!element) return;
-  element.textContent = "";
+  element.innerHTML = "";
   element.classList.remove("visible", "success", "error");
+  element.classList.add("hidden");
 }
 
 function setStatus(label: string, tone: StatusTone = "ok"): void {
@@ -354,22 +362,52 @@ async function handleLogin(event: SubmitEvent): Promise<void> {
     return;
   }
   if (!email || !password) {
-    showMessage(authMessage, "Email dan kata sandi wajib diisi.");
+    if (!email) emailInput?.classList.add("input-error");
+    if (!password) passwordInput?.classList.add("input-error");
+    showMessage(authMessage, "Alamat email dan kata sandi wajib diisi.");
     return;
   }
 
   setStatus("Memproses login…", "warn");
   clearMessage(authMessage);
+
+  const loginButton = getEl<HTMLButtonElement>("login-button");
+  if (loginButton) {
+    loginButton.disabled = true;
+    loginButton.innerHTML = `<span>Memverifikasi kredensial…</span>`;
+  }
+
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
+
+  if (loginButton) {
+    loginButton.disabled = false;
+    loginButton.innerHTML = `<span>Masuk ke Dashboard</span><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  }
+
   if (error) {
     setStatus("Login gagal", "error");
-    showMessage(
-      authMessage,
-      error.message || "Login gagal. Cek kredensial Anda.",
-    );
+    emailInput?.classList.add("input-error");
+    passwordInput?.classList.add("input-error");
+
+    let userMsg = error.message;
+    const lower = error.message.toLowerCase();
+    if (
+      lower.includes("invalid login credentials") ||
+      lower.includes("invalid grant")
+    ) {
+      userMsg =
+        "Email atau kata sandi yang Anda masukkan salah. Silakan periksa kembali.";
+    } else if (lower.includes("email not confirmed")) {
+      userMsg = "Alamat email belum dikonfirmasi. Periksa kotak masuk Anda.";
+    } else if (lower.includes("too many requests")) {
+      userMsg =
+        "Terlalu banyak percobaan masuk yang gagal. Silakan coba lagi beberapa saat lagi.";
+    }
+
+    showMessage(authMessage, userMsg, "error");
     return;
   }
   await ensureRole(data.session);
@@ -420,6 +458,15 @@ async function handleLogout(): Promise<void> {
 }
 
 loginForm?.addEventListener("submit", (event) => void handleLogin(event));
+emailInput?.addEventListener("input", () => {
+  emailInput.classList.remove("input-error");
+  clearMessage(authMessage);
+});
+passwordInput?.addEventListener("input", () => {
+  passwordInput.classList.remove("input-error");
+  clearMessage(authMessage);
+});
+
 getEl<HTMLButtonElement>("reset-password")?.addEventListener(
   "click",
   () => void handleReset(),
