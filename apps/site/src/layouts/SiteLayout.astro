@@ -100,13 +100,12 @@ const defaultOrgSchema = {
         href="/"
         aria-label={`${siteSettings.siteName}, beranda`}>
         <img
-          src="/logo-mark.svg"
-          alt=""
-          width="20"
-          height="20"
-          class="wordmark-logo"
+          src="/logo.svg"
+          alt={siteSettings.siteName}
+          width="160"
+          height="32"
+          class="site-logo"
         />
-        <span>{siteSettings.wordmark}</span>
       </a>
 
       <!-- Menu Navigasi Desktop Terpusat -->
@@ -141,13 +140,12 @@ const defaultOrgSchema = {
       <div class="menu-dialog__top">
         <a class="wordmark" href="/">
           <img
-            src="/logo-mark.svg"
-            alt=""
-            width="22"
-            height="22"
-            class="wordmark-logo"
+            src="/logo.svg"
+            alt={siteSettings.siteName}
+            width="160"
+            height="32"
+            class="site-logo site-logo--inverted"
           />
-          <span>{siteSettings.wordmark}</span>
         </a>
         <button class="menu-close" type="button" aria-label="Tutup menu"
           >Tutup <span aria-hidden="true">×</span></button
@@ -170,13 +168,12 @@ const defaultOrgSchema = {
     <footer class="site-footer">
       <a class="wordmark" href="/">
         <img
-          src="/logo-mark.svg"
-          alt=""
-          width="20"
-          height="20"
-          class="wordmark-logo"
+          src="/logo.svg"
+          alt={siteSettings.siteName}
+          width="160"
+          height="32"
+          class="site-logo"
         />
-        <span>{siteSettings.wordmark}</span>
       </a>
       <p style="white-space: pre-line;">{siteSettings.footerText}</p>
       <nav aria-label="Tautan footer">
@@ -357,18 +354,25 @@ const defaultOrgSchema = {
       .wordmark {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
         width: fit-content;
         color: inherit;
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 0.06em;
         text-decoration: none;
       }
-      .wordmark-logo {
-        width: 22px;
-        height: 22px;
-        flex-shrink: 0;
+      .site-logo {
+        height: 32px;
+        width: auto;
+        display: block;
+        transition: filter 200ms ease;
+      }
+      .site-header--over-hero .site-logo,
+      .site-header--scrolled .site-logo {
+        filter: brightness(0) invert(1);
+      }
+      .site-header--light-page .site-logo {
+        filter: none;
+      }
+      .site-logo--inverted {
+        filter: brightness(0) invert(1);
       }
       .header-nav-inline {
         display: none;
