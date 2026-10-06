@@ -341,22 +341,46 @@ export function mountPageEditor(client: SupabaseClient, user: User): void {
       const statusLabel = page.isHome
         ? "Beranda"
         : hasUnpublishedChanges
-          ? "Terbit · draf belum diterbitkan"
+          ? "Terbit · Draf Baru"
           : page.status === "published"
             ? "Terbit"
             : "Draf";
+      const statusBadgeClass = page.isHome
+        ? "badge badge-home"
+        : page.status === "published"
+          ? "badge badge-published"
+          : "badge badge-draft";
+
       const label = document.createElement("button");
       label.className = "page-row__open";
       label.type = "button";
-      label.innerHTML = `<strong>${escapeHtml(page.title)}</strong><span>/${escapeHtml(page.slug)} · ${statusLabel}</span>`;
+      label.innerHTML = `
+        <div class="page-row__info">
+          <strong class="page-row__title">${escapeHtml(page.title)}</strong>
+          <span class="page-row__slug">/${escapeHtml(page.slug)}</span>
+        </div>
+        <span class="${statusBadgeClass}">${statusLabel}</span>
+      `;
       label.addEventListener("click", () => openPage(page.id));
+
+      const actions = document.createElement("div");
+      actions.className = "page-row__actions";
+
+      const editBtn = document.createElement("button");
+      editBtn.className = "btn-secondary btn-sm";
+      editBtn.type = "button";
+      editBtn.textContent = "Sunting";
+      editBtn.addEventListener("click", () => openPage(page.id));
+
       const duplicate = document.createElement("button");
-      duplicate.className = "button compact";
+      duplicate.className = "btn-secondary btn-sm";
       duplicate.type = "button";
       duplicate.textContent = "Duplikat";
       duplicate.setAttribute("aria-label", `Duplikat ${page.title}`);
       duplicate.addEventListener("click", () => duplicatePage(page));
-      row.append(label, duplicate);
+
+      actions.append(editBtn, duplicate);
+      row.append(label, actions);
       list.append(row);
     }
   };

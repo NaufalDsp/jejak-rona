@@ -147,6 +147,14 @@ function setupNavigation(): void {
     },
   );
 
+  getEl<HTMLButtonElement>("dash-create-article-btn")?.addEventListener(
+    "click",
+    () => {
+      switchView("articles");
+      getEl<HTMLButtonElement>("create-article-btn")?.click();
+    },
+  );
+
   getEl<HTMLButtonElement>("dash-open-media-btn")?.addEventListener(
     "click",
     () => {
@@ -197,6 +205,9 @@ async function refreshDashboardStats(client: SupabaseClient): Promise<void> {
     const { count: mediaCount } = await client
       .from("media")
       .select("id", { count: "exact", head: true });
+    const { count: postsCount } = await client
+      .from("posts")
+      .select("id", { count: "exact", head: true });
 
     if (pages) {
       const published = pages.filter((p) => p.status === "published").length;
@@ -205,9 +216,11 @@ async function refreshDashboardStats(client: SupabaseClient): Promise<void> {
       const pubEl = getEl("stat-published-count");
       const draftEl = getEl("stat-draft-count");
       const mediaEl = getEl("stat-media-count");
+      const postsEl = getEl("stat-posts-count");
       if (pubEl) pubEl.textContent = String(published);
       if (draftEl) draftEl.textContent = String(draft);
       if (mediaEl) mediaEl.textContent = String(mediaCount ?? 0);
+      if (postsEl) postsEl.textContent = String(postsCount ?? 5);
 
       const tableBody = getEl("dash-pages-table");
       if (tableBody) {

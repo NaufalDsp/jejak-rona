@@ -4,133 +4,155 @@
 ---
 
 <section class="hidden" id="page-editor" aria-label="Editor halaman">
-  <div class="admin-card" style="padding: 1rem 1.25rem; margin-bottom: 1rem;">
-    <div
-      style="display: flex; justify-content: space-between; align-items: center;">
-      <div style="display: flex; align-items: center; gap: 1rem;">
-        <button class="btn-secondary" id="back-to-pages" type="button"
-          >← Kembali ke Daftar</button
-        >
-        <span
-          id="draft-save-status"
-          class="badge badge-published"
-          aria-live="polite">Tersimpan</span
-        >
-      </div>
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <button
-          class="btn-secondary"
-          id="undo-edit"
-          type="button"
-          title="Urungkan (Undo)">Undo</button
-        >
-        <button
-          class="btn-secondary"
-          id="redo-edit"
-          type="button"
-          title="Ulangi (Redo)">Redo</button
-        >
-        <button
-          class="btn-secondary"
-          id="view-revisions-btn"
-          type="button"
-          title="Riwayat snapshot revisi">Riwayat Revisi</button
-        >
-        <button
-          class="btn-primary"
-          id="publish-page-btn"
-          type="button"
-          style="font-weight: 600;">Terbitkan Halaman</button
-        >
-        <button class="btn-text-danger" id="delete-page" type="button"
-          >Hapus</button
-        >
-      </div>
-    </div>
-  </div>
-
   <p id="editor-message" class="admin-error-box hidden" role="status"></p>
 
   <!-- Tampilan List Halaman -->
   <div id="page-list-view" class="admin-card">
-    <div class="media-toolbar">
+    <div class="admin-card__header">
+      <div>
+        <h2 class="admin-card__title">Kelola Halaman Situs</h2>
+        <span class="muted" style="font-size: 13px;"
+          >Kelola tata letak, hierarki konten, dan publikasi halaman Jejak Rona.</span
+        >
+      </div>
+      <button class="btn-primary" id="create-page" type="button">
+        + Buat Halaman Baru
+      </button>
+    </div>
+
+    <div class="page-list-toolbar" style="margin-bottom: 1.25rem;">
       <input
         id="page-search"
         type="search"
         placeholder="Cari halaman berdasarkan judul atau slug…"
-        style="padding: 0.45rem 0.75rem; border: 1px solid var(--bone-300); border-radius: 2px; width: 320px;"
+        style="padding: 0.55rem 0.85rem; border: 1.5px solid var(--bone-300); border-radius: 4px; width: 340px; background: #FAF8F5;"
       />
-      <button class="btn-primary" id="create-page" type="button"
-        >+ Buat Halaman</button
-      >
     </div>
+
     <div
       id="page-list"
-      style="display: flex; flex-direction: column; gap: 4px;">
+      style="display: flex; flex-direction: column; gap: 8px;">
     </div>
   </div>
 
   <!-- Tampilan Workspace Editor 3 Zona -->
   <div id="page-edit-view" class="hidden">
+    <!-- Toolbar Aksi Editor Halaman -->
+    <div
+      class="admin-card page-editor-toolbar"
+      style="padding: 0.9rem 1.25rem; margin-bottom: 1.25rem;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <button class="btn-secondary" id="back-to-pages" type="button"
+            >← Kembali ke Daftar</button
+          >
+          <span
+            id="draft-save-status"
+            class="badge badge-published"
+            aria-live="polite">Tersimpan</span
+          >
+        </div>
+        <div
+          style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+          <button
+            class="btn-secondary"
+            id="undo-edit"
+            type="button"
+            title="Urungkan (Undo)">Undo</button
+          >
+          <button
+            class="btn-secondary"
+            id="redo-edit"
+            type="button"
+            title="Ulangi (Redo)">Redo</button
+          >
+          <button
+            class="btn-secondary"
+            id="view-revisions-btn"
+            type="button"
+            title="Riwayat snapshot revisi">Riwayat Revisi</button
+          >
+          <button
+            class="btn-primary"
+            id="publish-page-btn"
+            type="button"
+            style="font-weight: 600;">Terbitkan Halaman</button
+          >
+          <button class="btn-danger" id="delete-page" type="button"
+            >Hapus</button
+          >
+        </div>
+      </div>
+    </div>
+
     <form
       id="page-form"
       class="admin-card"
-      style="margin-bottom: 1rem;"
+      style="margin-bottom: 1.25rem;"
       autocomplete="off">
       <div
-        style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 0.75rem; align-items: end;">
+        style="display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.2fr auto; gap: 1rem; align-items: end;">
         <div>
           <label
-            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
-            >Judul Halaman</label
+            style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500); margin-bottom: 4px;"
+            >Judul Halaman *</label
           >
           <input
             name="title"
             maxlength="120"
             required
-            style="width: 100%; padding: 0.4rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+            placeholder="mis. Ekspedisi Nusantara"
+            style="width: 100%; padding: 0.55rem 0.75rem; border: 1.5px solid var(--bone-300); border-radius: 4px;"
           />
         </div>
         <div>
           <label
-            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
-            >Slug URL</label
+            style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500); margin-bottom: 4px;"
+            >Slug URL *</label
           >
           <input
             name="slug"
             maxlength="100"
             pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
             required
-            style="width: 100%; padding: 0.4rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+            placeholder="ekspedisi-nusantara"
+            style="width: 100%; padding: 0.55rem 0.75rem; border: 1.5px solid var(--bone-300); border-radius: 4px;"
           />
         </div>
         <div>
           <label
-            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+            style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500); margin-bottom: 4px;"
             >Judul SEO</label
           >
           <input
             name="seo-title"
             maxlength="70"
             required
-            style="width: 100%; padding: 0.4rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+            placeholder="Judul untuk pencarian..."
+            style="width: 100%; padding: 0.55rem 0.75rem; border: 1.5px solid var(--bone-300); border-radius: 4px;"
           />
         </div>
         <div>
           <label
-            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+            style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500); margin-bottom: 4px;"
             >Deskripsi SEO</label
           >
           <input
             name="seo-description"
             maxlength="160"
-            style="width: 100%; padding: 0.4rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+            placeholder="Deskripsi ringkas Google..."
+            style="width: 100%; padding: 0.55rem 0.75rem; border: 1.5px solid var(--bone-300); border-radius: 4px;"
           />
         </div>
-        <div style="padding-bottom: 6px;">
+        <div style="padding-bottom: 8px;">
           <label
-            style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 12px; cursor: pointer;">
-            <input name="is-home" type="checkbox" /> Halaman Beranda
+            style="display: inline-flex; align-items: center; gap: 0.45rem; font-size: 12.5px; font-weight: 600; cursor: pointer; color: var(--ink-950);">
+            <input
+              name="is-home"
+              type="checkbox"
+              style="width: auto; margin: 0;"
+            /> Halaman Beranda
           </label>
         </div>
       </div>
