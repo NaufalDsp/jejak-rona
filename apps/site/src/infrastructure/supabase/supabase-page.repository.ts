@@ -8,7 +8,8 @@ export interface PublicPageViewRow {
   id: string;
   slug: string;
   title: string;
-  published: unknown;
+  published?: unknown;
+  blocks?: unknown;
   seo: unknown;
   is_home: boolean;
   published_at: string | null;
@@ -30,6 +31,7 @@ export class SupabasePageRepository implements PageRepositoryPort {
   }
 
   private mapRowToPage(row: PublicPageViewRow): Page {
+    const rawBlocks = row.published ?? row.blocks;
     return {
       id: row.id,
       slug: row.slug,
@@ -37,9 +39,7 @@ export class SupabasePageRepository implements PageRepositoryPort {
       status: "published",
       isHome: row.is_home,
       seo: (row.seo as Page["seo"]) || { title: row.title, description: "" },
-      blocks: Array.isArray(row.published)
-        ? (row.published as Page["blocks"])
-        : [],
+      blocks: Array.isArray(rawBlocks) ? (rawBlocks as Page["blocks"]) : [],
       publishedAt: row.published_at,
     };
   }

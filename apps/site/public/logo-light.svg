@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" width="240" height="48" fill="none">
+  <!-- Brand Mark (Left) for Dark Backgrounds -->
+  <g transform="translate(4, 4)">
+    <circle cx="20" cy="20" r="18" stroke="#F6F1E9" stroke-width="1.5" stroke-opacity="0.35"/>
+    <circle cx="20" cy="20" r="15" stroke="#E27248" stroke-width="1" stroke-dasharray="2 2" stroke-opacity="0.85"/>
+    <!-- J -->
+    <path d="M15 13 V24 C15 27 13 28.5 10 28.5 C8.8 28.5 7.8 28.1 7 27.5 L8.2 25.5 C8.6 25.8 9.2 26.2 10 26.2 C11.3 26.2 12.3 25.4 12.3 23.8 V13 H15 Z" fill="#E27248"/>
+    <!-- R -->
+    <path d="M17 13 H25.5 C29 13 31 14.8 31 17.8 C31 20.2 29.5 21.8 27.2 22.3 L31.5 28.5 H28 L24 22.8 H19.7 V28.5 H17 V13 Z M19.7 15.6 V20.4 H25.2 C27 20.4 28.3 19.5 28.3 17.8 C28.3 16 27 15.6 25.2 15.6 H19.7 Z" fill="#F6F1E9"/>
+    <!-- Dot -->
+    <circle cx="20" cy="9.5" r="1.5" fill="#E27248"/>
+  </g>
+
+  <!-- Typography: JEJAK RONA -->
+  <text x="54" y="26" font-family="'Newsreader', Georgia, 'Times New Roman', serif" font-size="19" font-weight="600" letter-spacing="0.08em" fill="#F6F1E9">
+    JEJAK RONA
+  </text>
+
+  <!-- Subtitle: JURNAL VISUAL NUSANTARA -->
+  <text x="55" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="500" letter-spacing="0.22em" fill="#E27248">
+    JURNAL VISUAL NUSANTARA
+  </text>
+</svg>

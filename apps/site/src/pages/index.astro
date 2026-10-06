@@ -3,7 +3,11 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import BlockRenderer from "../blocks/BlockRenderer.astro";
 import { GetPublishedPageUseCase } from "../application/use-cases/get-published-page.use-case.js";
 import { SupabasePageRepository } from "../infrastructure/supabase/supabase-page.repository.js";
-import { getPublishedPosts, resolvePostCover } from "../lib/site-data";
+import {
+  getPublishedPosts,
+  resolvePostCover,
+  getSiteSettings,
+} from "../lib/site-data";
 
 const pages = new GetPublishedPageUseCase(new SupabasePageRepository());
 const page = await pages.executeHome();
@@ -14,6 +18,7 @@ if (!page) {
   );
 }
 
+const siteSettings = await getSiteSettings();
 const posts = await getPublishedPosts();
 const featuredPosts = posts.slice(0, 3);
 
@@ -44,7 +49,18 @@ const heroImage =
               <h2 class="home-section-title">Cerita dari Penjuru Kepulauan</h2>
             </div>
             <a href="/artikel" class="home-see-all-link">
-              Jelajahi Seluruh Arsip
+              <span>Jelajahi Seluruh Arsip</span>
+              <span class="home-see-all-arrow" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M3 8h10M9 4l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
             </a>
           </header>
 
@@ -118,15 +134,19 @@ const heroImage =
     </div>
   </section>
 
-  <!-- Elemen Menarik 3: Manifesto Reflektif Penutup -->
+  <!-- Elemen Menarik 3: Manifesto Reflektif Penutup (Dinamis dari Pengaturan CMS) -->
   <section class="home-quote-section" aria-label="Manifesto Editorial">
     <div class="quote-inner">
       <blockquote class="editorial-pullquote">
-        “Di hadapan bentang Nusantara yang hening, kita tidak datang untuk
-        menaklukkan, melainkan untuk mendengar kembali cerita yang hampir
-        terlupakan.”
+        “{
+          siteSettings.description ||
+            "Di hadapan bentang Nusantara yang hening, kita tidak datang untuk menaklukkan, melainkan untuk mendengar kembali cerita yang hampir terlupakan."
+        }”
       </blockquote>
-      <cite class="editorial-cite">— Catatan Kuratorial Jejak Rona</cite>
+      <cite class="editorial-cite"
+        >— {siteSettings.tagline ? `${siteSettings.tagline} • ` : ""}Catatan
+        Kuratorial {siteSettings.siteName || "Jejak Rona"}</cite
+      >
     </div>
   </section>
 </SiteLayout>
@@ -172,17 +192,55 @@ const heroImage =
   }
 
   .home-see-all-link {
-    font-size: var(--text-small, 0.875rem);
-    color: var(--ink-950, #12110d);
-    text-decoration: none;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    transition: color 0.15s ease;
+    gap: 0.75rem;
+    padding: 0.625rem 1.25rem 0.625rem 1.5rem;
+    font-size: var(--text-small, 0.875rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink-950, #12110d);
+    background: var(--paper-0, #ffffff);
+    border: 1.5px solid var(--ink-950, #12110d);
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(18, 17, 13, 0.06);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .home-see-all-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--sand-200, #eee7dc);
+    color: var(--ink-950, #12110d);
+    transition:
+      transform 0.25s ease,
+      background 0.25s ease,
+      color 0.25s ease;
   }
 
   .home-see-all-link:hover {
-    color: var(--ember-600, #b83d1b);
+    background: var(--ink-950, #12110d);
+    color: var(--bone-50, #fcfbf8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(18, 17, 13, 0.16);
+  }
+
+  .home-see-all-link:hover .home-see-all-arrow {
+    background: var(--terracotta-600, #c85a32);
+    color: #ffffff;
+    transform: translateX(3px);
+  }
+
+  .home-see-all-link:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(18, 17, 13, 0.12);
   }
 
   /* Grid Kartu Editorial (Tanpa border/box shadow sesuai design.md 6.8) */

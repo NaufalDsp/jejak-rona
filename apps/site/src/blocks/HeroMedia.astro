@@ -53,7 +53,14 @@ const scrim = {
       <div class="hero__aside">
         {block.subtext && <p>{block.subtext}</p>}
         {block.ctaLabel && block.ctaUrl && (
-          <a class="hero__cta" href={block.ctaUrl}>{block.ctaLabel}</a>
+          <a class="hero__cta" href={block.ctaUrl}>
+            <span class="hero__cta-label">{block.ctaLabel}</span>
+            <span class="hero__cta-icon" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
         )}
       </div>
     )}
@@ -109,8 +116,61 @@ const scrim = {
   .hero__line--second > span { animation-delay: 120ms; }
   .hero__aside { width: min(34ch, 34%); margin: clamp(54px, 8vh, 110px) 0 0 54%; animation: fade-in 400ms 820ms both; }
   .hero__aside p { margin: 0 0 20px; font-size: var(--text-lead); line-height: 1.35; }
-  .hero__cta { display: inline-flex; min-height: 44px; align-items: center; gap: 20px; padding: 0 14px; border-radius: 2px; background: var(--paper-0); color: var(--ink-950); font-size: var(--text-ui); text-decoration: none; }
-  .hero__cta span { font-size: 18px; }
+  .hero__cta {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    gap: 16px;
+    padding: 0 8px 0 22px;
+    border-radius: 999px;
+    background: rgba(246, 241, 233, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    color: var(--ink-950);
+    font-size: var(--text-ui, 0.8125rem);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.16);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    cursor: pointer;
+  }
+  .hero__cta-label {
+    position: relative;
+    z-index: 1;
+    transition: color 0.25s ease;
+  }
+  .hero__cta-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--ink-950);
+    color: var(--bone-50);
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, color 0.25s ease;
+  }
+  .hero__cta:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px -4px rgba(0, 0, 0, 0.36), 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.9);
+  }
+  .hero__cta:hover .hero__cta-icon {
+    background: var(--terracotta-600, #c85a32);
+    color: #ffffff;
+    transform: translateX(4px);
+  }
+  .hero__cta:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.24);
+  }
   .hero__pause { position: absolute; z-index: 3; right: var(--margin-x); bottom: 24px; min-width: 76px; min-height: 44px; border: 1px solid var(--bone-50); border-radius: 50%; background: transparent; color: var(--bone-50); cursor: pointer; }
   @keyframes reveal-line { from { transform: translateY(105%); } to { transform: translateY(0); } }
   @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
