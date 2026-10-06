@@ -1,9 +1,18 @@
 ---
 import type { ImageFullBlock } from "@jejak-rona/schema";
 
-interface Props { block: ImageFullBlock }
+interface Props {
+  block: ImageFullBlock;
+}
 const { block } = Astro.props;
 const isInset = block.variant === "inset";
+
+const rawCaption = block.caption || "";
+const isOldPlaceholder = rawCaption.includes(
+  "Keseimbangan antara material alami",
+);
+const caption = isOldPlaceholder ? "" : rawCaption;
+const credit = isOldPlaceholder ? "" : block.media.credit;
 ---
 
 <figure class:list={["image-full", { "image-full--inset": isInset }]}>
@@ -15,15 +24,41 @@ const isInset = block.variant === "inset";
     loading="lazy"
     decoding="async"
   />
-  {(block.caption || block.media.credit) && (
-    <figcaption>{block.caption}{block.caption && block.media.credit && <span aria-hidden="true"> · </span>}{block.media.credit}</figcaption>
-  )}
+  {
+    (caption || credit) && (
+      <figcaption>
+        {caption}
+        {caption && credit && <span aria-hidden="true"> · </span>}
+        {credit}
+      </figcaption>
+    )
+  }
 </figure>
 
 <style>
-  .image-full { width: 100%; margin: 0; padding: 0 0 var(--section-y); }
-  .image-full--inset { padding-inline: var(--margin-x); }
-  img { display: block; width: 100%; height: auto; aspect-ratio: attr(width) / attr(height); object-fit: cover; }
-  figcaption { max-width: var(--container-max); margin: 12px auto 0; padding-inline: var(--margin-x); color: var(--stone-700); font-size: var(--text-small); }
-  .image-full--inset figcaption { padding-inline: 0; }
+  .image-full {
+    width: 100%;
+    margin: 0;
+    padding: 0 0 var(--section-y);
+  }
+  .image-full--inset {
+    padding-inline: var(--margin-x);
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: attr(width) / attr(height);
+    object-fit: cover;
+  }
+  figcaption {
+    max-width: var(--container-max);
+    margin: 12px auto 0;
+    padding-inline: var(--margin-x);
+    color: var(--stone-700);
+    font-size: var(--text-small);
+  }
+  .image-full--inset figcaption {
+    padding-inline: 0;
+  }
 </style>

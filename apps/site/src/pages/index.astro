@@ -3,18 +3,336 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import BlockRenderer from "../blocks/BlockRenderer.astro";
 import { GetPublishedPageUseCase } from "../application/use-cases/get-published-page.use-case.js";
 import { SupabasePageRepository } from "../infrastructure/supabase/supabase-page.repository.js";
+import { getPublishedPosts } from "../lib/site-data";
 
 const pages = new GetPublishedPageUseCase(new SupabasePageRepository());
 const page = await pages.executeHome();
 
 if (!page) {
-  throw new Error("Halaman beranda terbit tidak ditemukan. Periksa Supabase atau fixture publik.");
+  throw new Error(
+    "Halaman beranda terbit tidak ditemukan. Periksa Supabase atau fixture publik.",
+  );
 }
 
+const posts = await getPublishedPosts();
+const featuredPosts = posts.slice(0, 3);
+
 const hero = page.blocks.find((block) => block.type === "hero_media");
-const heroImage = hero?.media.kind === "image" ? hero.media.url : hero?.poster || hero?.media.posterUrl;
+const heroImage =
+  hero?.media.kind === "image"
+    ? hero.media.url
+    : hero?.poster || hero?.media.posterUrl;
 ---
 
-<SiteLayout title={page.seo.title} description={page.seo.description} heroImage={heroImage}>
+<SiteLayout
+  title={page.seo.title}
+  description={page.seo.description}
+  heroImage={heroImage}>
+  <!-- Blok Utama Halaman Beranda -->
   <BlockRenderer blocks={page.blocks} />
+
+  <!-- Elemen Menarik 1: Kurasi Narasi & Catatan Pilihan (Sesuai Tema Majalah Editorial) -->
+  {
+    featuredPosts.length > 0 && (
+      <section
+        class="home-featured-section"
+        aria-label="Catatan Editorial Terkini">
+        <div class="home-section-inner">
+          <header class="home-section-header">
+            <div>
+              <span class="home-section-tag">CATATAN TERKURASI</span>
+              <h2 class="home-section-title">Cerita dari Penjuru Kepulauan</h2>
+            </div>
+            <a href="/artikel" class="home-see-all-link">
+              Jelajahi Seluruh Arsip <span>→</span>
+            </a>
+          </header>
+
+          <div class="home-posts-grid">
+            {featuredPosts.map((post) => {
+              const dateFormatted = new Date(
+                post.publishedAt,
+              ).toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              });
+
+              return (
+                <article class="featured-card">
+                  <a href={`/artikel/${post.slug}`} class="featured-card__link">
+                    <div class="featured-card__media">
+                      <img
+                        src={
+                          post.coverImageUrl ||
+                          "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80"
+                        }
+                        alt={post.title}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div class="featured-card__meta">
+                      <time datetime={post.publishedAt}>{dateFormatted}</time>
+                      <span class="sep">•</span>
+                      <span>{post.readingTimeMinutes} mnt baca</span>
+                    </div>
+                    <h3 class="featured-card__title">{post.title}</h3>
+                    <p class="featured-card__excerpt">{post.excerpt}</p>
+                  </a>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Elemen Menarik 2: Tiga Pilar Kurasi Visual Nusantara -->
+  <section class="home-pillars-section" aria-label="Tiga Pilar Narasi">
+    <div class="home-section-inner">
+      <div class="pillars-grid">
+        <div class="pillar-item">
+          <span class="pillar-number">01</span>
+          <h3 class="pillar-title">Bentang Hening</h3>
+          <p class="pillar-text">
+            Merekam kejujuran lanskap alam kepulauan tanpa manipulasi berlebih,
+            menghargai ruang lapang dan ritme cuaca asli.
+          </p>
+        </div>
+        <div class="pillar-item">
+          <span class="pillar-number">02</span>
+          <h3 class="pillar-title">Ketabahan Kriya</h3>
+          <p class="pillar-text">
+            Menelusuri warisan tenun, ukir, dan tembikar tradisional yang
+            dipintal dengan ketabahan tangan-tangan maestro desa.
+          </p>
+        </div>
+        <div class="pillar-item">
+          <span class="pillar-number">03</span>
+          <h3 class="pillar-title">Ritme Kehidupan</h3>
+          <p class="pillar-text">
+            Menghadirkan sosok dan tatap muka manusia Nusantara secara
+            bermartabat, bersahaja, dan penuh penghormatan kultural.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Elemen Menarik 3: Manifesto Reflektif Penutup -->
+  <section class="home-quote-section" aria-label="Manifesto Editorial">
+    <div class="quote-inner">
+      <blockquote class="editorial-pullquote">
+        “Di hadapan bentang Nusantara yang hening, kita tidak datang untuk
+        menaklukkan, melainkan untuk mendengar kembali cerita yang hampir
+        terlupakan.”
+      </blockquote>
+      <cite class="editorial-cite">— Catatan Kuratorial Jejak Rona</cite>
+    </div>
+  </section>
 </SiteLayout>
+
+<style>
+  .home-featured-section {
+    padding: 6rem 0;
+    border-top: 1px solid var(--sand-300, #ded4c5);
+    background-color: var(--bone-50, #fcfbf8);
+  }
+
+  .home-section-inner {
+    max-width: var(--container-wide, 1140px);
+    margin: 0 auto;
+    padding: 0 var(--space-6, 1.5rem);
+  }
+
+  .home-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--sand-200, #ede7de);
+  }
+
+  .home-section-tag {
+    font-size: var(--text-small, 0.8125rem);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--sand-600, #736b5e);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .home-section-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    font-weight: 400;
+    color: var(--ink-950, #12110d);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .home-see-all-link {
+    font-size: var(--text-small, 0.875rem);
+    color: var(--ink-950, #12110d);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.15s ease;
+  }
+
+  .home-see-all-link:hover {
+    color: var(--ember-600, #b83d1b);
+  }
+
+  /* Grid Kartu Editorial (Tanpa border/box shadow sesuai design.md 6.8) */
+  .home-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 2.5rem;
+    row-gap: 3rem;
+  }
+
+  .featured-card__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .featured-card__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--sand-200, #ede7de);
+    margin-bottom: 1.25rem;
+  }
+
+  .featured-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .featured-card:hover .featured-card__media img {
+    transform: scale(1.03);
+  }
+
+  .featured-card__meta {
+    font-size: 0.75rem;
+    color: var(--sand-600, #736b5e);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .sep {
+    color: var(--sand-400, #ded4c5);
+  }
+
+  .featured-card__title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--ink-950, #12110d);
+    margin: 0 0 0.5rem;
+    transition: color 0.15s ease;
+  }
+
+  .featured-card:hover .featured-card__title {
+    color: var(--ember-600, #b83d1b);
+  }
+
+  .featured-card__excerpt {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--ink-700, #4d483f);
+    margin: 0;
+  }
+
+  /* Tiga Pilar Narasi */
+  .home-pillars-section {
+    padding: 5rem 0;
+    border-top: 1px solid var(--sand-200, #ede7de);
+    background-color: var(--sand-100, #f5f2eb);
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+  }
+
+  .pillar-number {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: 2.25rem;
+    font-weight: 300;
+    color: var(--sand-500, #8c8273);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .pillar-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: 1.375rem;
+    font-weight: 500;
+    color: var(--ink-950, #12110d);
+    margin: 0 0 0.75rem;
+  }
+
+  .pillar-text {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--ink-700, #4d483f);
+    margin: 0;
+  }
+
+  /* Manifesto Penutup */
+  .home-quote-section {
+    padding: 7rem 1.5rem;
+    text-align: center;
+    background-color: var(--ink-950, #12110d);
+    color: var(--bone-50, #fcfbf8);
+  }
+
+  .quote-inner {
+    max-width: 58ch;
+    margin: 0 auto;
+  }
+
+  .editorial-pullquote {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--bone-50, #fcfbf8);
+    margin: 0 0 1.5rem;
+  }
+
+  .editorial-cite {
+    font-size: var(--text-small, 0.8125rem);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sand-400, #ded4c5);
+    font-style: normal;
+  }
+
+  @media (max-width: 900px) {
+    .home-posts-grid,
+    .pillars-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .home-section-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+</style>

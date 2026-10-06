@@ -74,6 +74,46 @@ where id = (select id from auth.users where email = 'email-admin-anda');
 Jangan pernah menaruh `SUPABASE_SERVICE_ROLE_KEY` di variabel `PUBLIC_*` atau di
 kode browser. Gunakan hanya di server/function tepercaya.
 
+## Status Rilis v1.0 (Lengkap Tahap 1–10)
+
+Sistem telah menyelesaikan seluruh cakupan Milestone M0–M6 PRD:
+
+- [x] **Fondasi & Desain Sistem**: Token desain CSS (`packages/tokens`),
+      tipografi Cormorant Garamond & Hanken Grotesk.
+- [x] **Panel Redaksi (Admin)**: Editor 3-zona dense (daftar blok 240px, live
+      preview 1fr, inspektur properti 340px).
+- [x] **Pustaka Media & Titik Fokus**: Upload gambar/video, titik fokus
+      interaktif (16:9 vs 9:16), proteksi hapus media aktif.
+- [x] **Alur Penerbitan & Revisi**: Validasi pra-terbit ketat, riwayat snapshot
+      revisi (maks 20), pemulihan draf, pelacak status build.
+- [x] **Artikel & Arsip Editorial**: Daftar artikel (list & grid 4:5), pembacaan
+      68ch, kalkulasi otomatis waktu baca, filter topik.
+- [x] **Formulir Kontak**: Anti-spam honeypot, Pages Function, pembatasan laju,
+      pesan masuk di admin.
+- [x] **SEO & Metadata**: JSON-LD Schema (Organization & Article), Open Graph,
+      Twitter Cards, Sitemap XML dinamis, Robots.txt, Halaman 404.
+- [x] **Pengerasan & Keamanan**: Row Level Security (RLS) pada seluruh tabel,
+      CI/CD GitHub Actions, keepalive ping, dan skrip pencadangan data.
+
+## Skrip Operasional & Pencadangan
+
+```bash
+# Validasi Tipe & Build Statis
+npm run check-types
+npx --workspace=@jejak-rona/site astro check
+npm --workspace=@jejak-rona/site run build
+
+# Pencadangan Database (Windows PowerShell / Linux)
+./scripts/backup-db.ps1
+./scripts/backup-db.sh
+```
+
+## Dokumentasi Tambahan
+
+- [Panduan Penggunaan Editor](docs/editor-guide.md)
+- [Panduan Kesiapan Bencana & Pemulihan](docs/disaster-recovery.md)
+- [Panduan Pemulihan Data Cadangan](scripts/restore-guide.md)
+
 ## Prinsip Pengembangan
 
 1. **Clean Code & Clean Architecture:** Domain murni tidak boleh bergantung pada

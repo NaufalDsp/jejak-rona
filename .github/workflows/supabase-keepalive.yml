@@ -1,0 +1,31 @@
+name: Supabase Keepalive Ping
+
+# Menjaga proyek Supabase Free Tier tetap aktif dari jeda inaktivitas (pause)
+# Berjalan setiap 5 hari pukul 04:00 UTC
+on:
+  schedule:
+    - cron: '0 4 */5 * *'
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          if [ -z "${{ secrets.PUBLIC_SUPABASE_URL }}" ] || [ -z "${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}" ]; then
+            echo "Secrets PUBLIC_SUPABASE_URL atau PUBLIC_SUPABASE_ANON_KEY belum dikonfigurasi. Melewati ping."
+            exit 0
+          fi
+
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}" \
+            "${{ secrets.PUBLIC_SUPABASE_URL }}/rest/v1/site_settings?select=key&limit=1")
+
+          echo "HTTP Response: $RESPONSE"
+          if [ "$RESPONSE" -eq 200 ]; then
+            echo "Supabase aktif dan merespons."
+          else
+            echo "Peringatan: Response tidak 200 ($RESPONSE)."
+          fi

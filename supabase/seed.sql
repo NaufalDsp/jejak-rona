@@ -79,7 +79,7 @@ values (
       "id": "img-full-home",
       "type": "image_full",
       "variant": "full",
-      "caption": "Keseimbangan antara material alami dan ruang hening.",
+      "caption": "",
       "media": {
         "id": "media-full-1",
         "kind": "image",
@@ -89,7 +89,7 @@ values (
         "width": 2560,
         "height": 1440,
         "alt": "Hutan berkabut lebat dengan cahaya menembus pepohonan",
-        "credit": "Unsplash (Unsplash License)"
+        "credit": ""
       }
     }
   ]'::jsonb,
@@ -132,7 +132,7 @@ values (
       "id": "img-full-home",
       "type": "image_full",
       "variant": "full",
-      "caption": "Keseimbangan antara material alami dan ruang hening.",
+      "caption": "",
       "media": {
         "id": "media-full-1",
         "kind": "image",
@@ -142,7 +142,7 @@ values (
         "width": 2560,
         "height": 1440,
         "alt": "Hutan berkabut lebat dengan cahaya menembus pepohonan",
-        "credit": "Unsplash (Unsplash License)"
+        "credit": ""
       }
     }
   ]'::jsonb,
