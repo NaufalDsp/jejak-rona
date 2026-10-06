@@ -219,15 +219,36 @@ const credit =
   }
 
   @media (max-width: 767px) {
+    .image-wrapper {
+      background: transparent;
+      overflow: visible;
+    }
     .curatorial-badge {
       position: static;
-      margin: 1rem 1rem 0;
+      margin: 1.25rem var(--margin-x, 1rem) 0;
       max-width: none;
-      box-shadow: none;
-      background: var(--sand-100);
+      box-shadow: 0 4px 16px rgba(18, 17, 13, 0.05);
+      background: var(--paper-0, #fcfbf8);
+      border: 1px solid var(--bone-200, #ddd5c7);
+      border-radius: 4px;
+      padding: 1.25rem 1.35rem;
     }
     .badge-title {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
+      color: var(--ink-950);
+      font-weight: 500;
+    }
+    .badge-narrative {
+      font-size: 0.8125rem;
+      color: var(--stone-700);
+      line-height: 1.55;
+    }
+    .badge-meta {
+      border-color: var(--bone-200);
+      color: var(--stone-500);
+    }
+    figcaption {
+      margin-top: 0.75rem;
     }
   }
 </style>
