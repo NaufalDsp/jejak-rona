@@ -1,0 +1,23 @@
+---
+// Component: DialogMediaPicker
+// Dialog modal pemilihan berkas media untuk disematkan pada blok konten
+---
+
+<dialog class="picker-dialog" id="media-picker-modal">
+  <div
+    style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bone-200); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+    <h3 style="margin: 0; font-size: 15px; font-weight: 600;">
+      Pilih Berkas dari Pustaka Media
+    </h3>
+    <button
+      class="btn-text"
+      onclick="document.getElementById('media-picker-modal').close()"
+      type="button">Batal</button
+    >
+  </div>
+  <div
+    class="media-grid"
+    id="picker-media-grid"
+    style="max-height: 55vh; overflow-y: auto;">
+  </div>
+</dialog>

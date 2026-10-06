@@ -1,0 +1,229 @@
+---
+// Component: PageEditorSection
+// Editor Blok Tiga Zona (Daftar Blok, Pratinjau Asli, Panel Bidang) & List Halaman
+---
+
+<section class="hidden" id="page-editor" aria-label="Editor halaman">
+  <div class="admin-card" style="padding: 1rem 1.25rem; margin-bottom: 1rem;">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <button class="btn-secondary" id="back-to-pages" type="button"
+          >← Kembali ke Daftar</button
+        >
+        <span
+          id="draft-save-status"
+          class="badge badge-published"
+          aria-live="polite">Tersimpan</span
+        >
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <button
+          class="btn-secondary"
+          id="undo-edit"
+          type="button"
+          title="Urungkan (Undo)">Undo</button
+        >
+        <button
+          class="btn-secondary"
+          id="redo-edit"
+          type="button"
+          title="Ulangi (Redo)">Redo</button
+        >
+        <button
+          class="btn-secondary"
+          id="view-revisions-btn"
+          type="button"
+          title="Riwayat snapshot revisi">Riwayat Revisi</button
+        >
+        <button
+          class="btn-primary"
+          id="publish-page-btn"
+          type="button"
+          style="font-weight: 600;">Terbitkan Halaman</button
+        >
+        <button class="btn-text-danger" id="delete-page" type="button"
+          >Hapus</button
+        >
+      </div>
+    </div>
+  </div>
+
+  <p id="editor-message" class="admin-error-box hidden" role="status"></p>
+
+  <!-- Tampilan List Halaman -->
+  <div id="page-list-view" class="admin-card">
+    <div class="media-toolbar">
+      <input
+        id="page-search"
+        type="search"
+        placeholder="Cari halaman berdasarkan judul atau slug…"
+        style="padding: 0.45rem 0.75rem; border: 1px solid var(--bone-300); border-radius: 2px; width: 320px;"
+      />
+      <button class="btn-primary" id="create-page" type="button"
+        >+ Buat Halaman</button
+      >
+    </div>
+    <div
+      id="page-list"
+      style="display: flex; flex-direction: column; gap: 4px;">
+    </div>
+  </div>
+
+  <!-- Tampilan Workspace Editor 3 Zona -->
+  <div id="page-edit-view" class="hidden">
+    <form
+      id="page-form"
+      class="admin-card"
+      style="margin-bottom: 1rem;"
+      autocomplete="off">
+      <div
+        style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 0.75rem; align-items: end;">
+        <div>
+          <label
+            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+            >Judul Halaman</label
+          >
+          <input
+            name="title"
+            maxlength="120"
+            required
+            style="width: 100%; padding: 0.4rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+          />
+        </div>
+        <div>
+          <label
+            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+            >Slug URL</label
+          >
+          <input
+            name="slug"
+            maxlength="100"
+            pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+            required
+            style="width: 100%; padding: 0.4rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+          />
+        </div>
+        <div>
+          <label
+            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+            >Judul SEO</label
+          >
+          <input
+            name="seo-title"
+            maxlength="70"
+            required
+            style="width: 100%; padding: 0.4rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+          />
+        </div>
+        <div>
+          <label
+            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+            >Deskripsi SEO</label
+          >
+          <input
+            name="seo-description"
+            maxlength="160"
+            style="width: 100%; padding: 0.4rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+          />
+        </div>
+        <div style="padding-bottom: 6px;">
+          <label
+            style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 12px; cursor: pointer;">
+            <input name="is-home" type="checkbox" /> Halaman Beranda
+          </label>
+        </div>
+      </div>
+    </form>
+
+    <!-- Workspace 3 Zona Sesuai design.md: Kiri (Daftar Blok), Tengah (Pratinjau Asli), Kanan (Panel Bidang) -->
+    <div
+      style="display: grid; grid-template-columns: 240px 1fr 340px; gap: 1rem; min-height: 640px;">
+      <!-- Zona 1: Daftar Blok (Kiri) -->
+      <div
+        class="admin-card"
+        style="padding: 1rem; display: flex; flex-direction: column;">
+        <h4
+          style="margin: 0 0 0.75rem; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500);">
+          Struktur Blok
+        </h4>
+        <div
+          id="block-list"
+          style="display: flex; flex-direction: column; gap: 4px; flex: 1; overflow-y: auto;">
+        </div>
+        <div
+          style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--bone-100); display: flex; gap: 4px;">
+          <select
+            id="new-block-type"
+            style="flex: 1; padding: 0.35rem; font-size: 13px; border: 1px solid var(--bone-300); border-radius: 2px;">
+            <option value="hero_media">Hero Media</option>
+            <option value="rich_text">Rich Text</option>
+            <option value="image_full">Gambar Penuh</option>
+          </select>
+          <button class="btn-primary-sm" id="add-block" type="button"
+            >+ Tambah</button
+          >
+        </div>
+        <small class="muted" style="margin-top: 6px; font-size: 13px;"
+          >Papan ketik: Alt + ↑ / ↓ untuk urutan.</small
+        >
+      </div>
+
+      <!-- Zona 2: Pratinjau Draf Asli (Tengah - design.md: memakai komponen asli) -->
+      <div
+        class="admin-card"
+        style="padding: 1rem; display: flex; flex-direction: column;">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h4
+            style="margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500);">
+            Pratinjau Draf Asli
+          </h4>
+          <div
+            style="display: flex; gap: 2px; background: var(--bone-100); padding: 2px; border-radius: 2px;">
+            <button
+              type="button"
+              class="btn-text"
+              data-preview-size="desktop"
+              style="font-size: 13px; padding: 2px 6px;">Desktop</button
+            >
+            <button
+              type="button"
+              class="btn-text"
+              data-preview-size="tablet"
+              style="font-size: 13px; padding: 2px 6px;">Tablet</button
+            >
+            <button
+              type="button"
+              class="btn-text"
+              data-preview-size="mobile"
+              style="font-size: 13px; padding: 2px 6px;">Seluler</button
+            >
+          </div>
+        </div>
+        <div
+          style="flex: 1; background: var(--bone-200); display: flex; justify-content: center; overflow: auto; border: 1px solid var(--bone-300);">
+          <iframe
+            id="draft-preview"
+            title="Pratinjau draf"
+            data-size="desktop"
+            sandbox="allow-same-origin"
+            style="width: 100%; height: 100%; min-height: 540px; border: 0; background: #fff;"
+          ></iframe>
+        </div>
+      </div>
+
+      <!-- Zona 3: Panel Bidang Blok Terpilih (Kanan) -->
+      <div class="admin-card" style="padding: 1rem; overflow-y: auto;">
+        <h4
+          style="margin: 0 0 0.75rem; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500);">
+          Bidang Blok Terpilih
+        </h4>
+        <div
+          id="block-fields"
+          style="display: flex; flex-direction: column; gap: 0.85rem;">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

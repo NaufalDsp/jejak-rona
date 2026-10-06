@@ -1,0 +1,31 @@
+---
+// Component: DialogDeletePage
+// Dialog konfirmasi hapus halaman (konfirmasi pengetikan nama persis)
+---
+
+<dialog
+  class="admin-card"
+  id="delete-page-dialog"
+  style="width: min(400px, 90vw); border: 1px solid var(--bone-300); padding: 1.5rem;">
+  <h3 style="margin-top: 0;">Hapus Halaman?</h3>
+  <p style="font-size: 13px; color: var(--stone-700);">
+    Tindakan ini permanen. Ketik persis judul halaman untuk mengonfirmasi:
+  </p>
+  <input
+    id="delete-page-name"
+    autocomplete="off"
+    style="width: 100%; padding: 0.5rem; border: 1px solid var(--bone-300); margin-bottom: 1rem;"
+  />
+  <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+    <button class="btn-secondary" id="cancel-delete" type="button">Batal</button
+    >
+    <button
+      class="btn-primary"
+      id="delete-page-confirm"
+      type="button"
+      disabled
+      style="background: var(--danger-500); border-color: var(--danger-500);"
+      >Hapus Permanen</button
+    >
+  </div>
+</dialog>

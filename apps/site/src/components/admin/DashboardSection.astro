@@ -1,0 +1,95 @@
+---
+// Component: DashboardSection
+// Ringkasan metrik editorial, aksi cepat, dan tabel halaman situs
+---
+
+<section class="hidden" id="dashboard" aria-live="polite">
+  <div class="admin-card">
+    <div class="admin-card__header">
+      <div>
+        <h2 class="admin-card__title" id="profile-overview">Dashboard</h2>
+        <span class="muted" style="font-size: 12px;"
+          >Ringkasan status publikasi situs dan berkas editorial.</span
+        >
+      </div>
+      <div>
+        <span class="badge badge-published" id="role-badge">ADMIN</span>
+      </div>
+    </div>
+
+    <!-- Baris Metrik Berdaya Guna -->
+    <div class="metrics-row">
+      <div class="metric-cell">
+        <div class="metric-cell__label">Halaman Terbit</div>
+        <div class="metric-cell__value" id="stat-published-count">2</div>
+        <div class="metric-cell__sub">Dapat dibaca publik</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-cell__label">Draf Aktif</div>
+        <div class="metric-cell__value" id="stat-draft-count">1</div>
+        <div class="metric-cell__sub">Belum dipublikasikan</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-cell__label">Berkas Media</div>
+        <div class="metric-cell__value" id="stat-media-count">3</div>
+        <div class="metric-cell__sub">Foto & Video terdaftar</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-cell__label">Status Build Situs</div>
+        <div
+          class="metric-cell__value"
+          style="font-size: 20px; color: var(--grass-600);">
+          TAYANG
+        </div>
+        <div class="metric-cell__sub">Astro Static Build</div>
+      </div>
+    </div>
+
+    <!-- Aksi Cepat Tindakan Langsung -->
+    <div class="quick-actions-bar">
+      <button class="btn-primary" type="button" id="dash-create-page-btn"
+        >+ Buat Halaman Baru</button
+      >
+      <button class="btn-secondary" type="button" id="dash-open-media-btn"
+        >Pustaka Media</button
+      >
+      <a
+        href="/"
+        target="_blank"
+        class="btn-secondary"
+        style="text-decoration: none;">Pratinjau Situs Publik</a
+      >
+    </div>
+  </div>
+
+  <!-- Ringkasan Halaman Terdaftar -->
+  <div class="admin-card">
+    <div class="admin-card__header">
+      <h3 class="admin-card__title">Daftar Halaman Situs</h3>
+      <span class="muted" style="font-size: 12px;"
+        >Klik halaman untuk menyunting di Editor Blok.</span
+      >
+    </div>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Judul Halaman</th>
+          <th>Slug URL</th>
+          <th>Peran</th>
+          <th>Status</th>
+          <th style="text-align: right;">Tindakan</th>
+        </tr>
+      </thead>
+      <tbody id="dash-pages-table">
+        <tr>
+          <td
+            colspan="5"
+            class="muted"
+            style="text-align: center; padding: 1.5rem;"
+            >Memuat daftar halaman…</td
+          >
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

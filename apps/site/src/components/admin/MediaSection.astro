@@ -1,0 +1,69 @@
+---
+// Component: MediaSection
+// Pustaka Media (Unggah Berkas, Dropzone, Filter, Grid Foto & Video)
+---
+
+<section class="hidden" id="media-panel" aria-label="Pustaka media">
+  <div class="admin-card">
+    <div class="admin-card__header">
+      <div>
+        <h2 class="admin-card__title">Pustaka Media</h2>
+        <span class="muted" style="font-size: 12px;"
+          >Unggah foto editorial dan video loop hero berizin resmi.</span
+        >
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <input
+          type="file"
+          id="media-file-input"
+          accept="image/webp,image/jpeg,image/png,video/mp4,video/webm"
+          class="hidden"
+        />
+        <button class="btn-primary" type="button" id="upload-media-trigger"
+          >+ Unggah Berkas</button
+        >
+      </div>
+    </div>
+
+    <!-- Filter & Search Toolbar -->
+    <div class="media-toolbar">
+      <input
+        id="media-search"
+        type="search"
+        placeholder="Cari nama berkas atau teks alt…"
+        style="padding: 0.45rem 0.75rem; border: 1px solid var(--bone-300); border-radius: 2px; width: 280px;"
+      />
+      <div class="media-filters">
+        <button class="media-tab active" type="button" data-media-filter="all"
+          >Semua</button
+        >
+        <button class="media-tab" type="button" data-media-filter="image"
+          >Foto</button
+        >
+        <button class="media-tab" type="button" data-media-filter="video"
+          >Video</button
+        >
+      </div>
+    </div>
+
+    <!-- Drag & Drop Area -->
+    <div class="media-dropzone" id="media-dropzone">
+      <p>
+        Seret berkas foto atau video ke sini, atau klik tombol Unggah di atas.
+      </p>
+      <small class="muted"
+        >Format: WebP, JPEG, PNG, MP4. Video loop maks 6 MB & 15-20 detik.</small
+      >
+    </div>
+
+    <div
+      id="media-upload-error"
+      class="admin-error-box hidden"
+      style="white-space: pre-wrap;">
+    </div>
+    <div id="media-upload-progress" class="admin-loading hidden"></div>
+
+    <!-- Gallery Grid -->
+    <div class="media-grid" id="media-grid"></div>
+  </div>
+</section>

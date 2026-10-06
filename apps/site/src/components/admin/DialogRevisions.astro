@@ -1,0 +1,47 @@
+---
+// Component: DialogRevisions
+// Dialog riwayat snapshot revisi halaman (PRD 8.1 & 8.2)
+---
+
+<dialog
+  class="admin-card"
+  id="revisions-dialog"
+  style="width: min(720px, 95vw); border: 1px solid var(--bone-300); padding: 1.5rem;">
+  <div
+    style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bone-200); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+    <h3 style="margin: 0; font-size: 16px; font-weight: 600;">
+      Riwayat Snapshot Revisi Halaman
+    </h3>
+    <button class="btn-text" id="close-revisions-dialog" type="button"
+      >Tutup</button
+    >
+  </div>
+  <p
+    style="font-size: 13px; color: var(--stone-700); margin-top: 0; margin-bottom: 1rem;">
+    Setiap kali halaman diterbitkan, snapshot otomatis dicatat (maksimal 20
+    riwayat). Anda dapat memulihkan draf ke versi mana pun di bawah:
+  </p>
+
+  <div id="revisions-list" style="max-height: 50vh; overflow-y: auto;">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Waktu Terbit</th>
+          <th>Judul Saat Itu</th>
+          <th>Jumlah Blok</th>
+          <th style="text-align: right;">Tindakan</th>
+        </tr>
+      </thead>
+      <tbody id="revisions-table-body">
+        <tr>
+          <td
+            colspan="4"
+            class="muted"
+            style="text-align: center; padding: 1rem;"
+            >Memuat riwayat revisi…</td
+          >
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</dialog>

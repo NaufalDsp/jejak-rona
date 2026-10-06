@@ -1,0 +1,46 @@
+---
+// Component: ArticlesSection
+// Manajemen artikel editorial & jurnal Jejak Rona
+---
+
+<section
+  class="hidden"
+  id="articles-panel"
+  aria-label="Manajemen artikel editorial">
+  <div class="admin-card">
+    <div class="admin-card__header">
+      <div>
+        <h2 class="admin-card__title">Arsip Artikel Editorial</h2>
+        <span class="muted" style="font-size: 13px;"
+          >Kelola narasi, esai visual, tag topik, dan publikasi cerita.</span
+        >
+      </div>
+      <button class="btn-primary" id="create-article-btn" type="button">
+        + Tulis Artikel Baru
+      </button>
+    </div>
+
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Judul & Slug</th>
+          <th>Status</th>
+          <th>Topik / Tag</th>
+          <th>Waktu Baca</th>
+          <th>Terbit</th>
+          <th style="text-align: right;">Tindakan</th>
+        </tr>
+      </thead>
+      <tbody id="articles-table-body">
+        <tr>
+          <td
+            colspan="6"
+            class="muted"
+            style="text-align: center; padding: 1.5rem;">
+            Memuat daftar artikel…
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

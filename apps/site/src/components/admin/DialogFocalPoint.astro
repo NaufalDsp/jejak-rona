@@ -1,0 +1,97 @@
+---
+// Component: DialogFocalPoint
+// Dialog pemilih titik fokus interaktif (focal point) & editor metadata foto (alt, kredit)
+---
+
+<dialog class="focal-dialog" id="focal-point-dialog">
+  <div
+    style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bone-200); padding-bottom: 0.75rem;">
+    <h3 style="margin: 0; font-size: 15px; font-weight: 600;">
+      Atur Titik Fokus (Focal Point) & Aksesibilitas
+    </h3>
+    <span class="badge badge-published" id="focal-coords-display"
+      >X: 50% | Y: 50%</span
+    >
+  </div>
+
+  <div class="focal-layout">
+    <!-- Area Kanvas Gambar Interaktif -->
+    <div>
+      <label
+        style="display: block; font-size: 11px; text-transform: uppercase; font-weight: 600; color: var(--stone-500); margin-bottom: 4px;"
+        >Klik atau geser target lingkaran ke subjek utama foto:</label
+      >
+      <div class="focal-canvas-wrap" id="focal-interactive-canvas">
+        <img id="focal-source-image" src="" alt="Focal target" />
+        <div
+          class="focal-target-marker"
+          id="focal-marker"
+          style="left: 50%; top: 50%;">
+        </div>
+      </div>
+      <small
+        class="muted"
+        style="display: block; margin-top: 4px; font-size: 11px;"
+        >Titik ini menentukan pusat pemotongan foto saat layar menyempit
+        (desktop vs ponsel).</small
+      >
+
+      <!-- Input Metadata Alt & Kredit Wajib -->
+      <div
+        style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+        <div>
+          <label
+            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+            >Teks Alt (Wajib untuk aksesibilitas pembaca layar)</label
+          >
+          <input
+            id="focal-alt-input"
+            style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+            placeholder="Deskripsikan isi foto secara jujur…"
+          />
+        </div>
+        <div>
+          <label
+            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;"
+            >Kredit Foto & Lisensi</label
+          >
+          <input
+            id="focal-credit-input"
+            style="width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+            placeholder="Contoh: Nama Fotografer / Unsplash"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Dua Pratinjau Langsung (Desktop 16:9 & Seluler 9:16) -->
+    <div class="focal-previews">
+      <div class="preview-box">
+        <div class="preview-box__label">
+          Pratinjau Pemotongan Desktop (16:9)
+        </div>
+        <div class="preview-desktop-crop">
+          <img id="focal-prev-desktop" src="" alt="Desktop Crop" />
+        </div>
+      </div>
+      <div class="preview-box">
+        <div class="preview-box__label">
+          Pratinjau Pemotongan Seluler (9:16)
+        </div>
+        <div class="preview-mobile-crop">
+          <img id="focal-prev-mobile" src="" alt="Mobile Crop" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.25rem; border-top: 1px solid var(--bone-200); padding-top: 1rem;">
+    <button class="btn-secondary" id="close-focal-dialog" type="button"
+      >Tutup</button
+    >
+    <button class="btn-primary" id="save-focal-point" type="button"
+      >Simpan Titik Fokus</button
+    >
+  </div>
+</dialog>

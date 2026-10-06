@@ -1,0 +1,124 @@
+---
+// Component: DialogArticleEditor
+// Dialog penyuntingan & pembuatan artikel editorial / esai visual
+---
+
+<dialog
+  class="admin-card"
+  id="article-editor-dialog"
+  style="width: min(720px, 95vw); border: 1px solid var(--bone-300); padding: 1.5rem;">
+  <div
+    style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bone-200); padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+    <h3
+      id="article-dialog-title"
+      style="margin: 0; font-size: 16px; font-weight: 600;">
+      Tulis Artikel Baru
+    </h3>
+    <button class="btn-text" id="close-article-dialog-btn" type="button"
+      >Tutup</button
+    >
+  </div>
+
+  <form id="article-form">
+    <div
+      style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+      <div>
+        <label
+          style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+          Judul Artikel *
+        </label>
+        <input
+          id="article-title-input"
+          required
+          placeholder="mis. Meniti Pagi di Lembah Baliem"
+          style="width: 100%; padding: 0.5rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+        />
+      </div>
+      <div>
+        <label
+          style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+          Slug URL *
+        </label>
+        <input
+          id="article-slug-input"
+          required
+          placeholder="meniti-pagi-lembah-baliem"
+          style="width: 100%; padding: 0.5rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+        />
+      </div>
+    </div>
+
+    <div style="margin-bottom: 1rem;">
+      <label
+        style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+        Ringkasan / Excerpt (Maks 160 Karakter untuk SEO Meta)
+      </label>
+      <textarea
+        id="article-excerpt-input"
+        rows="2"
+        maxlength="200"
+        placeholder="Ringkasan singkat yang memikat untuk hasil pencarian dan pratinjau media sosial..."
+        style="width: 100%; padding: 0.5rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+      ></textarea>
+    </div>
+
+    <div
+      style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+      <div>
+        <label
+          style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+          Tag / Topik (Dipisah dengan koma)
+        </label>
+        <input
+          id="article-tags-input"
+          placeholder="Perjalanan, Budaya, Fotografi"
+          style="width: 100%; padding: 0.5rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+        />
+      </div>
+      <div>
+        <label
+          style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+          Estimasi Waktu Baca
+        </label>
+        <div
+          id="article-reading-time-badge"
+          style="padding: 0.5rem; background: var(--bone-200); border-radius: 2px; font-size: 12px; color: var(--stone-700); text-align: center;">
+          1 menit baca
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 1.5rem;">
+      <label
+        style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+        Isi Narasi Editorial (Teks Terstruktur)
+      </label>
+      <textarea
+        id="article-content-input"
+        rows="6"
+        placeholder="Tuliskan narasi editorial Anda di sini..."
+        style="width: 100%; padding: 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px; line-height: 1.6;"
+      ></textarea>
+    </div>
+
+    <div
+      style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--bone-200); padding-top: 1rem;">
+      <button
+        class="btn-primary"
+        id="publish-article-btn"
+        type="button"
+        style="display:none; background:#2e7d32; border-color:#2e7d32;">
+        Terbitkan Artikel
+      </button>
+      <div style="display: flex; gap: 0.5rem; margin-left: auto;">
+        <button
+          class="btn-secondary"
+          type="button"
+          onclick="document.getElementById('article-editor-dialog').close()">
+          Batal
+        </button>
+        <button class="btn-primary" type="submit"> Simpan Draf </button>
+      </div>
+    </div>
+  </form>
+</dialog>

@@ -1,0 +1,50 @@
+---
+// Component: AuthSection
+// Formulir otentikasi login modern admin Jejak Rona
+---
+
+<section class="auth-container hidden" id="auth-panel" aria-live="polite">
+  <div class="auth-box">
+    <h1>Masuk Panel Admin</h1>
+    <p>Gunakan akun staf terverifikasi untuk mengelola konten dan media.</p>
+
+    <div id="auth-message" class="admin-error-box hidden" aria-live="assertive">
+    </div>
+
+    <form id="login-form" novalidate>
+      <div class="form-group">
+        <label for="email">Alamat Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          placeholder="admin@jejakrona.com"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Kata Sandi</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="••••••••"
+          required
+        />
+      </div>
+
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+        <button class="btn-primary" id="login-button" type="submit"
+          >Masuk ke Panel</button
+        >
+        <button class="btn-text" id="reset-password" type="button"
+          >Reset sandi</button
+        >
+      </div>
+    </form>
+  </div>
+</section>
