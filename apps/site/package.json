@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "build": "astro build",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {

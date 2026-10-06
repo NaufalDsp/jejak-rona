@@ -1,0 +1,398 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout
+  title="Hubungi Redaksi"
+  description="Kirimkan pertanyaan, tawaran liputan visual, atau korespondensi editorial kepada tim Jejak Rona.">
+  <div class="contact-page">
+    <div class="contact-card">
+      <header class="contact-header">
+        <span class="contact-tag">KORESPONDENSI</span>
+        <h1 class="contact-title">Kirim Catatan</h1>
+        <p class="contact-intro">
+          Kami menyambut cerita perjalanan, usulan liputan visual kriya
+          Nusantara, atau sekadar salam santun dari pembaca.
+        </p>
+      </header>
+
+      <!-- Keadaan Berhasil (Sesuai 6.10 design.md: satu kalimat dan satu tautan kembali) -->
+      <div id="contact-success" class="contact-success" hidden>
+        <p class="success-message">
+          Pesan Anda telah kami terima dengan baik. Tim redaksi akan membaca
+          dalam ritme tenang.
+        </p>
+        <a href="/" class="back-link">← Kembali ke Beranda</a>
+      </div>
+
+      <!-- Formulir Kontak (Garis bawah 1px tanpa kotak sesuai 6.10 design.md) -->
+      <form id="contact-form" class="contact-form" novalidate>
+        <!-- Honeypot anti-spam tersembunyi -->
+        <div style="display:none;" aria-hidden="true">
+          <label for="contact-website">Website (jangan diisi):</label>
+          <input
+            type="text"
+            id="contact-website"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="contact-name" class="field-label">Nama Lengkap</label>
+          <input
+            type="text"
+            id="contact-name"
+            name="name"
+            class="field-input"
+            placeholder="mis. Rian Sastrawan"
+            required
+            autocomplete="name"
+          />
+          <span class="field-error" id="error-name" hidden>
+            <span class="error-icon" aria-hidden="true">!</span>
+            <span class="error-text">Nama wajib diisi minimal 2 karakter.</span>
+          </span>
+        </div>
+
+        <div class="form-field">
+          <label for="contact-email" class="field-label">Alamat Surel</label>
+          <input
+            type="email"
+            id="contact-email"
+            name="email"
+            class="field-input"
+            placeholder="nama@domain.id"
+            required
+            autocomplete="email"
+          />
+          <span class="field-error" id="error-email" hidden>
+            <span class="error-icon" aria-hidden="true">!</span>
+            <span class="error-text">Alamat surel tidak valid.</span>
+          </span>
+        </div>
+
+        <div class="form-field">
+          <label for="contact-message" class="field-label"
+            >Pesan / Gagasan Cerita</label
+          >
+          <textarea
+            id="contact-message"
+            name="message"
+            class="field-input field-textarea"
+            rows="4"
+            placeholder="Tuliskan gagasan, pertanyaan, atau catatan Anda di sini..."
+            required></textarea>
+          <span class="field-error" id="error-message" hidden>
+            <span class="error-icon" aria-hidden="true">!</span>
+            <span class="error-text">Pesan minimal 10 karakter.</span>
+          </span>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="submit-btn" class="submit-btn">
+            Kirimkan Pesan
+          </button>
+        </div>
+
+        <p id="form-general-error" class="general-error" hidden></p>
+      </form>
+    </div>
+  </div>
+</SiteLayout>
+
+<script>
+  import { createClient } from "@supabase/supabase-js";
+
+  const form = document.getElementById(
+    "contact-form",
+  ) as HTMLFormElement | null;
+  const successCard = document.getElementById("contact-success");
+  const submitBtn = document.getElementById(
+    "submit-btn",
+  ) as HTMLButtonElement | null;
+  const generalError = document.getElementById("form-general-error");
+
+  const nameInput = document.getElementById(
+    "contact-name",
+  ) as HTMLInputElement | null;
+  const emailInput = document.getElementById(
+    "contact-email",
+  ) as HTMLInputElement | null;
+  const msgInput = document.getElementById(
+    "contact-message",
+  ) as HTMLTextAreaElement | null;
+  const honeypotInput = document.getElementById(
+    "contact-website",
+  ) as HTMLInputElement | null;
+
+  const errName = document.getElementById("error-name");
+  const errEmail = document.getElementById("error-email");
+  const errMessage = document.getElementById("error-message");
+
+  const supabaseUrl =
+    import.meta.env.PUBLIC_SUPABASE_URL ||
+    "https://vmejzesgssrghhjlrdhr.supabase.co";
+  const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Reset error
+    if (errName) errName.hidden = true;
+    if (errEmail) errEmail.hidden = true;
+    if (errMessage) errMessage.hidden = true;
+    if (generalError) generalError.hidden = true;
+
+    const name = (nameInput?.value || "").trim();
+    const email = (emailInput?.value || "").trim();
+    const message = (msgInput?.value || "").trim();
+    const website = (honeypotInput?.value || "").trim();
+
+    let hasError = false;
+
+    if (name.length < 2) {
+      if (errName) errName.hidden = false;
+      hasError = true;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      if (errEmail) errEmail.hidden = false;
+      hasError = true;
+    }
+
+    if (message.length < 10) {
+      if (errMessage) errMessage.hidden = false;
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    // Jika bot mengisi honeypot, langsung tampilkan sukses tanpa menyimpan
+    if (website.length > 0) {
+      form.hidden = true;
+      if (successCard) successCard.hidden = false;
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Mengirim...";
+    }
+
+    try {
+      // Coba lewat Pages Function /api/contact terlebih dahulu
+      let submitted = false;
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, message, website }),
+        });
+        if (res.ok) {
+          submitted = true;
+        }
+      } catch {
+        // Fallback ke Supabase client langsung (khusus dev mode lokal)
+      }
+
+      if (!submitted && supabaseUrl && supabaseKey) {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const { error } = await supabase.from("submissions").insert({
+          name,
+          email,
+          message,
+        });
+        if (error) throw error;
+        submitted = true;
+      }
+
+      if (submitted) {
+        form.hidden = true;
+        if (successCard) successCard.hidden = false;
+      } else {
+        throw new Error("Gagal mengirim pesan.");
+      }
+    } catch (err: any) {
+      if (generalError) {
+        generalError.textContent =
+          err?.message ||
+          "Terjadi kendala saat mengirim. Silakan periksa koneksi Anda.";
+        generalError.hidden = false;
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Kirimkan Pesan";
+      }
+    }
+  });
+</script>
+
+<style>
+  .contact-page {
+    min-height: calc(100vh - var(--header-height, 68px));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--header-height, 68px) + 3rem) var(--space-6, 1.5rem) 6rem;
+  }
+
+  .contact-card {
+    width: 100%;
+    max-width: 580px;
+  }
+
+  .contact-header {
+    margin-bottom: 3rem;
+  }
+
+  .contact-tag {
+    font-size: var(--text-small, 0.8125rem);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--sand-600, #736b5e);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  .contact-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--ink-950, #12110d);
+    margin: 0 0 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .contact-intro {
+    font-size: var(--text-body, 1.0625rem);
+    color: var(--ink-700, #3d3a33);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* 6.10 Bidang Garis Bawah 1px (Tanpa Kotak) */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .field-label {
+    font-size: var(--text-small, 0.8125rem);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sand-600, #736b5e);
+  }
+
+  .field-input {
+    appearance: none;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--sand-300, #ded4c5);
+    border-radius: 0;
+    padding: 0.75rem 0;
+    font-size: 1.0625rem;
+    font-family: inherit;
+    color: var(--ink-950, #12110d);
+    transition: border-color 0.2s ease;
+  }
+
+  .field-input:focus {
+    outline: none;
+    border-bottom-color: var(--ink-950, #12110d);
+  }
+
+  .field-textarea {
+    resize: vertical;
+    min-height: 110px;
+    line-height: 1.6;
+  }
+
+  /* 6.10 Pesan Galat di Bawah Bidang dengan ember-600 dan tanda (!) */
+  .field-error {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--text-small, 0.8125rem);
+    color: var(--ember-600, #b83d1b);
+    margin-top: 0.25rem;
+  }
+
+  .error-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--ember-600, #b83d1b);
+    color: var(--bone-50, #fcfbf8);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .general-error {
+    font-size: var(--text-small, 0.8125rem);
+    color: var(--ember-600, #b83d1b);
+    margin: 0;
+  }
+
+  /* Tombol Utama Gelap Sesuai 6.10 */
+  .submit-btn {
+    appearance: none;
+    background: var(--ink-950, #12110d);
+    color: var(--bone-50, #fcfbf8);
+    border: none;
+    padding: 0.9rem 2rem;
+    font-size: 0.9375rem;
+    font-family: inherit;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+
+  .submit-btn:hover {
+    opacity: 0.9;
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* 6.10 Keadaan Berhasil: Satu Kalimat dan Satu Tautan Kembali */
+  .contact-success {
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--sand-300, #ded4c5);
+    border-bottom: 1px solid var(--sand-300, #ded4c5);
+  }
+
+  .success-message {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: 1.375rem;
+    line-height: 1.5;
+    color: var(--ink-950, #12110d);
+    margin: 0 0 1.5rem;
+  }
+
+  .back-link {
+    font-size: var(--text-small, 0.8125rem);
+    color: var(--sand-600, #736b5e);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .back-link:hover {
+    color: var(--ink-950, #12110d);
+  }
+</style>

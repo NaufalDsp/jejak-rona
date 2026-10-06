@@ -22,10 +22,12 @@ create index if not exists nav_items_parent_idx on public.nav_items (parent_id);
 alter table public.nav_items enable row level security;
 
 -- Publik bisa membaca menu navigasi
+drop policy if exists "nav_items_public_read" on public.nav_items;
 create policy "nav_items_public_read" on public.nav_items
   for select using (true);
 
 -- Staff bisa mengelola menu navigasi
+drop policy if exists "nav_items_staff_manage" on public.nav_items;
 create policy "nav_items_staff_manage" on public.nav_items
   for all to authenticated
   using (public.is_staff())
@@ -35,10 +37,12 @@ create policy "nav_items_staff_manage" on public.nav_items
 alter table public.site_settings enable row level security;
 
 -- Publik bisa membaca pengaturan situs umum
+drop policy if exists "site_settings_public_read" on public.site_settings;
 create policy "site_settings_public_read" on public.site_settings
   for select using (true);
 
 -- Staff bisa mengubah pengaturan situs
+drop policy if exists "site_settings_staff_manage" on public.site_settings;
 create policy "site_settings_staff_manage" on public.site_settings
   for all to authenticated
   using (public.is_staff())
@@ -48,10 +52,12 @@ create policy "site_settings_staff_manage" on public.site_settings
 alter table public.revisions enable row level security;
 
 -- Hanya staff yang bisa membaca dan membuat revisi
+drop policy if exists "revisions_staff_read" on public.revisions;
 create policy "revisions_staff_read" on public.revisions
   for select to authenticated
   using (public.is_staff());
 
+drop policy if exists "revisions_staff_insert" on public.revisions;
 create policy "revisions_staff_insert" on public.revisions
   for insert to authenticated
   with check (public.is_staff());
@@ -79,9 +85,9 @@ values
   ))
 on conflict (key) do nothing;
 
--- 3. BENIH AWAL MENU NAVIGASI
+-- 3. BENIH AWAL MENU NAVIGASI (Gunakan target_type = 'url' agar mandiri dan tidak melanggar foreign key)
 insert into public.nav_items (id, label, target_type, target_id, url, position)
 values
-  ('b1111111-1111-1111-1111-111111111111', 'Beranda', 'page', 'e2b3c4d5-0001-4000-8000-000000000001', '/beranda', 0),
-  ('b2222222-2222-2222-2222-222222222222', 'Tentang', 'page', 'e2b3c4d5-0002-4000-8000-000000000002', '/tentang', 1)
+  ('b1111111-1111-1111-1111-111111111111', 'Beranda', 'url', null, '/', 0),
+  ('b2222222-2222-2222-2222-222222222222', 'Tentang', 'url', null, '/tentang', 1)
 on conflict (id) do nothing;

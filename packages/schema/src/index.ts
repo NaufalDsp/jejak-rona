@@ -7,3 +7,5 @@ export * from "./media.js";
 export * from "./seo.js";
 export * from "./blocks/index.js";
 export * from "./page.js";
+export * from "./post.js";
+export * from "./submission.js";

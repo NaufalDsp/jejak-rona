@@ -7,6 +7,8 @@ import {
 import { mountPageEditor } from "./page-editor.js";
 import { mountMediaManager } from "./media-manager.js";
 import { SettingsNavManager } from "./settings-nav-manager.js";
+import { ArticlesManager } from "./articles-manager.js";
+import { MessagesManager } from "./messages-manager.js";
 
 type StaffProfile = { role: "admin" | "editor"; name: string };
 type StatusTone = "ok" | "warn" | "error";
@@ -23,6 +25,8 @@ const dashboard = getEl<HTMLElement>("dashboard");
 const pageEditor = getEl<HTMLElement>("page-editor");
 const mediaPanel = getEl<HTMLElement>("media-panel");
 const settingsPanel = getEl<HTMLElement>("settings-panel");
+const articlesPanel = getEl<HTMLElement>("articles-panel");
+const messagesPanel = getEl<HTMLElement>("messages-panel");
 const sessionMeta = getEl<HTMLSpanElement>("session-meta");
 const logoutButton = getEl<HTMLButtonElement>("logout-button");
 const loginForm = getEl<HTMLFormElement>("login-form");
@@ -72,9 +76,12 @@ function setStatus(label: string, tone: StatusTone = "ok"): void {
 let isMounted = false;
 let mediaManager: ReturnType<typeof mountMediaManager> | null = null;
 let settingsNavManager: SettingsNavManager | null = null;
+let articlesManager: ArticlesManager | null = null;
+let messagesManager: MessagesManager | null = null;
 
 function switchView(
-  viewName: "dashboard" | "pages" | "media" | "settings",
+  viewName:
+    "dashboard" | "pages" | "media" | "settings" | "articles" | "messages",
 ): void {
   const navItems =
     document.querySelectorAll<HTMLButtonElement>("[data-admin-view]");
@@ -88,6 +95,18 @@ function switchView(
     mediaPanel.classList.toggle("hidden", viewName !== "media");
     if (viewName === "media") {
       void mediaManager?.loadMedia(false);
+    }
+  }
+  if (articlesPanel) {
+    articlesPanel.classList.toggle("hidden", viewName !== "articles");
+    if (viewName === "articles") {
+      void articlesManager?.loadArticles();
+    }
+  }
+  if (messagesPanel) {
+    messagesPanel.classList.toggle("hidden", viewName !== "messages");
+    if (viewName === "messages") {
+      void messagesManager?.loadMessages();
     }
   }
   if (settingsPanel) {
@@ -105,7 +124,7 @@ function setupNavigation(): void {
   navItems.forEach((btn) => {
     btn.addEventListener("click", () => {
       const view = btn.dataset.adminView as
-        "dashboard" | "pages" | "media" | "settings";
+        "dashboard" | "pages" | "media" | "settings" | "articles" | "messages";
       if (view) switchView(view);
     });
   });
@@ -131,6 +150,8 @@ function renderLoggedOut(): void {
   dashboard?.classList.add("hidden");
   pageEditor?.classList.add("hidden");
   mediaPanel?.classList.add("hidden");
+  articlesPanel?.classList.add("hidden");
+  messagesPanel?.classList.add("hidden");
   settingsPanel?.classList.add("hidden");
   logoutButton?.classList.add("hidden");
   if (sessionMeta) sessionMeta.textContent = "Belum masuk";
@@ -143,6 +164,8 @@ function renderUnauthorized(message: string): void {
   dashboard?.classList.add("hidden");
   pageEditor?.classList.add("hidden");
   mediaPanel?.classList.add("hidden");
+  articlesPanel?.classList.add("hidden");
+  messagesPanel?.classList.add("hidden");
   settingsPanel?.classList.add("hidden");
   logoutButton?.classList.remove("hidden");
   if (sessionMeta) sessionMeta.textContent = "Sesi aktif";
@@ -298,6 +321,8 @@ async function ensureRole(session: Session | null): Promise<void> {
     setupNavigation();
     mountPageEditor(supabase, session.user);
     mediaManager = mountMediaManager(supabase, session.user);
+    articlesManager = new ArticlesManager(supabase);
+    messagesManager = new MessagesManager(supabase);
     settingsNavManager = new SettingsNavManager(supabase);
     settingsNavManager.init();
     void refreshDashboardStats(supabase);

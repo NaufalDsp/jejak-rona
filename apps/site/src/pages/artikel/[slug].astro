@@ -1,0 +1,328 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import BlockRenderer from "../../blocks/BlockRenderer.astro";
+import {
+  getPublishedPosts,
+  getRelatedPosts,
+  type PublishedPost,
+} from "../../lib/site-data";
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: PublishedPost;
+}
+
+const { post } = Astro.props;
+const relatedPosts = await getRelatedPosts(post.slug, post.tags, 2);
+
+const formattedDate = new Date(post.publishedAt).toLocaleDateString("id-ID", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+const coverImg =
+  post.coverImageUrl ||
+  "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1600&q=80";
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: post.title,
+  description: post.excerpt,
+  image: [coverImg],
+  datePublished: post.publishedAt,
+  author: {
+    "@type": "Organization",
+    name: "Redaksi Jejak Rona",
+  },
+};
+---
+
+<SiteLayout
+  title={post.title}
+  description={post.excerpt}
+  heroImage={coverImg}
+  ogType="article"
+  publishedTime={post.publishedAt}
+  jsonLd={articleSchema}>
+  <article class="article-page">
+    <!-- Kepala Artikel (6.9 design.md) -->
+    <header class="article-header">
+      <div class="article-header__meta">
+        <div class="article-tags">
+          {
+            post.tags.map((tag) => (
+              <a
+                href={`/artikel?tag=${encodeURIComponent(tag)}`}
+                class="article-tag">
+                {tag}
+              </a>
+            ))
+          }
+        </div>
+        <div class="article-byline">
+          <time datetime={post.publishedAt}>{formattedDate}</time>
+          <span class="bullet" aria-hidden="true">•</span>
+          <span>{post.readingTimeMinutes} menit baca</span>
+        </div>
+      </div>
+
+      <h1 class="article-title">{post.title}</h1>
+
+      {post.excerpt && <p class="article-lead">{post.excerpt}</p>}
+    </header>
+
+    <!-- Gambar Sampul Penuh Lebar -->
+    <div class="article-cover">
+      <img
+        src={coverImg}
+        alt={post.title}
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </div>
+
+    <!-- Isi Artikel dalam Kolom 68ch (6.9 design.md) -->
+    <div class="article-body">
+      {
+        post.blocks && post.blocks.length > 0 ? (
+          <BlockRenderer blocks={post.blocks} />
+        ) : (
+          <p class="empty-notice">
+            Konten narasi sedang dalam proses kurasi redaksi.
+          </p>
+        )
+      }
+    </div>
+
+    <!-- Akhir Artikel: Dua Artikel Terkait dalam Gaya Daftar (6.9 design.md) -->
+    {
+      relatedPosts.length > 0 && (
+        <aside class="related-section" aria-label="Artikel Terkait">
+          <h2 class="related-section__title">Cerita Terkait</h2>
+          <div class="related-list">
+            {relatedPosts.map((rel) => {
+              const relDate = new Date(rel.publishedAt).toLocaleDateString(
+                "id-ID",
+                {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                },
+              );
+
+              return (
+                <a href={`/artikel/${rel.slug}`} class="related-item">
+                  <time class="related-item__date">{relDate}</time>
+                  <div class="related-item__content">
+                    <h3 class="related-item__title">{rel.title}</h3>
+                    <p class="related-item__excerpt">{rel.excerpt}</p>
+                  </div>
+                  <div class="related-item__meta">
+                    <span>{rel.readingTimeMinutes} mnt baca</span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </aside>
+      )
+    }
+  </article>
+</SiteLayout>
+
+<style>
+  .article-page {
+    padding-top: calc(var(--header-height, 68px) + 3.5rem);
+    padding-bottom: 6rem;
+  }
+
+  .article-header {
+    max-width: 780px;
+    margin: 0 auto 3rem;
+    padding: 0 var(--space-6, 1.5rem);
+    text-align: center;
+  }
+
+  .article-header__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .article-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .article-tag {
+    font-size: var(--text-small, 0.8125rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--sand-600, #736b5e);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.15s ease;
+  }
+
+  .article-tag:hover {
+    color: var(--ink-950, #12110d);
+    border-bottom-color: var(--ink-950, #12110d);
+  }
+
+  .article-byline {
+    font-size: var(--text-small, 0.8125rem);
+    color: var(--sand-500, #8c8273);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .bullet {
+    color: var(--sand-400, #ded4c5);
+  }
+
+  .article-title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--ink-950, #12110d);
+    margin: 0 0 1.5rem;
+    letter-spacing: -0.015em;
+  }
+
+  .article-lead {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    font-style: italic;
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    color: var(--ink-700, #3d3a33);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Gambar Sampul Penuh Lebar */
+  .article-cover {
+    width: 100%;
+    max-width: var(--container-wide, 1280px);
+    margin: 0 auto 4rem;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--sand-200, #ede7de);
+  }
+
+  .article-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Kolom Baca 68ch sesuai Section 6.9 design.md */
+  .article-body {
+    max-width: 68ch;
+    margin: 0 auto;
+    padding: 0 var(--space-6, 1.5rem);
+    font-size: var(--text-body, 1.0625rem);
+    line-height: 1.7;
+    color: var(--ink-950, #12110d);
+  }
+
+  .empty-notice {
+    font-style: italic;
+    color: var(--sand-600, #736b5e);
+    text-align: center;
+    padding: 3rem 0;
+  }
+
+  /* Bagian Artikel Terkait di Akhir Artikel */
+  .related-section {
+    max-width: var(--container-wide, 1140px);
+    margin: 6rem auto 0;
+    padding: 4rem var(--space-6, 1.5rem) 0;
+    border-top: 1px solid var(--sand-300, #ded4c5);
+  }
+
+  .related-section__title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: var(--text-h3, 1.375rem);
+    font-weight: 500;
+    color: var(--ink-950, #12110d);
+    margin: 0 0 2rem;
+  }
+
+  .related-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .related-item {
+    display: grid;
+    grid-template-columns: 140px 1fr 140px;
+    align-items: baseline;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--sand-200, #ede7de);
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.15s ease;
+  }
+
+  .related-item:hover {
+    background-color: rgba(222, 212, 197, 0.15);
+  }
+
+  .related-item__date {
+    font-size: var(--text-small, 0.8125rem);
+    color: var(--sand-600, #736b5e);
+  }
+
+  .related-item__title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--ink-950, #12110d);
+    margin: 0 0 0.35rem;
+    transition: color 0.15s ease;
+  }
+
+  .related-item:hover .related-item__title {
+    color: var(--ember-600, #b83d1b);
+  }
+
+  .related-item__excerpt {
+    font-size: 0.8125rem;
+    color: var(--ink-700, #4d483f);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .related-item__meta {
+    font-size: 0.75rem;
+    color: var(--sand-500, #8c8273);
+    text-align: right;
+  }
+
+  @media (max-width: 768px) {
+    .related-item {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .related-item__meta {
+      text-align: left;
+    }
+  }
+</style>

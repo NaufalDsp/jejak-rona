@@ -59,6 +59,44 @@ import "../admin/admin.css";
             >
             <span>Halaman</span>
           </button>
+          <button
+            class="admin-nav-item"
+            type="button"
+            data-admin-view="articles">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              ><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path
+                d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+              ></path></svg
+            >
+            <span>Artikel</span>
+          </button>
+          <button
+            class="admin-nav-item"
+            type="button"
+            data-admin-view="messages">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              ><path
+                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+              ></path><polyline points="22,6 12,13 2,6"></polyline></svg
+            >
+            <span>Pesan Masuk</span>
+            <span
+              id="messages-unread-badge"
+              style="display:none; background:var(--ember-600); color:white; border-radius:10px; font-size:10px; padding:1px 5px; margin-left:auto;"
+            ></span>
+          </button>
           <button class="admin-nav-item" type="button" data-admin-view="media">
             <svg
               width="15"
@@ -584,6 +622,81 @@ import "../admin/admin.css";
             </div>
           </section>
 
+          <!-- 4B. TAHAP 9: ARTIKEL EDITORIAL -->
+          <section
+            class="hidden"
+            id="articles-panel"
+            aria-label="Manajemen artikel editorial">
+            <div class="admin-card">
+              <div class="admin-card__header">
+                <div>
+                  <h2 class="admin-card__title">Arsip Artikel Editorial</h2>
+                  <span class="muted" style="font-size: 13px;"
+                    >Kelola narasi, esai visual, tag topik, dan publikasi
+                    cerita.</span
+                  >
+                </div>
+                <button
+                  class="btn-primary"
+                  id="create-article-btn"
+                  type="button">
+                  + Tulis Artikel Baru
+                </button>
+              </div>
+
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Judul & Slug</th>
+                    <th>Status</th>
+                    <th>Topik / Tag</th>
+                    <th>Waktu Baca</th>
+                    <th>Terbit</th>
+                    <th style="text-align: right;">Tindakan</th>
+                  </tr>
+                </thead>
+                <tbody id="articles-table-body">
+                  <tr>
+                    <td
+                      colspan="6"
+                      class="muted"
+                      style="text-align: center; padding: 1.5rem;">
+                      Memuat daftar artikel…
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- 4C. TAHAP 9: PESAN MASUK FORMULIR KONTAK -->
+          <section
+            class="hidden"
+            id="messages-panel"
+            aria-label="Pesan masuk formulir kontak">
+            <div class="admin-card">
+              <div class="admin-card__header">
+                <div>
+                  <h2 class="admin-card__title">
+                    Pesan Masuk (Formulir Kontak)
+                  </h2>
+                  <span class="muted" style="font-size: 13px;"
+                    >Kiriman korespondensi dan gagasan dari pembaca situs.</span
+                  >
+                </div>
+              </div>
+
+              <div
+                id="messages-list"
+                style="display: flex; flex-direction: column;">
+                <div
+                  style="padding: 2rem; text-align: center; color: var(--sand-600);">
+                  Memuat pesan masuk…
+                </div>
+              </div>
+            </div>
+          </section>
+
           <!-- 5. TAHAP 8: PENGATURAN SITUS & NAVIGASI -->
           <section
             class="hidden"
@@ -993,6 +1106,127 @@ import "../admin/admin.css";
           </tbody>
         </table>
       </div>
+    </dialog>
+
+    <!-- DIALOG SUNTTING / BUAT ARTIKEL (TAHAP 9) -->
+    <dialog
+      class="admin-card"
+      id="article-editor-dialog"
+      style="width: min(720px, 95vw); border: 1px solid var(--bone-300); padding: 1.5rem;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bone-200); padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+        <h3
+          id="article-dialog-title"
+          style="margin: 0; font-size: 16px; font-weight: 600;">
+          Tulis Artikel Baru
+        </h3>
+        <button class="btn-text" id="close-article-dialog-btn" type="button"
+          >Tutup</button
+        >
+      </div>
+
+      <form id="article-form">
+        <div
+          style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label
+              style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+              Judul Artikel *
+            </label>
+            <input
+              id="article-title-input"
+              required
+              placeholder="mis. Meniti Pagi di Lembah Baliem"
+              style="width: 100%; padding: 0.5rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+            />
+          </div>
+          <div>
+            <label
+              style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+              Slug URL *
+            </label>
+            <input
+              id="article-slug-input"
+              required
+              placeholder="meniti-pagi-lembah-baliem"
+              style="width: 100%; padding: 0.5rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+            />
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label
+            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+            Ringkasan / Excerpt (Maks 160 Karakter untuk SEO Meta)
+          </label>
+          <textarea
+            id="article-excerpt-input"
+            rows="2"
+            maxlength="200"
+            placeholder="Ringkasan singkat yang memikat untuk hasil pencarian dan pratinjau media sosial..."
+            style="width: 100%; padding: 0.5rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+          ></textarea>
+        </div>
+
+        <div
+          style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label
+              style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+              Tag / Topik (Dipisah dengan koma)
+            </label>
+            <input
+              id="article-tags-input"
+              placeholder="Perjalanan, Budaya, Fotografi"
+              style="width: 100%; padding: 0.5rem; border: 1px solid var(--bone-300); border-radius: 2px;"
+            />
+          </div>
+          <div>
+            <label
+              style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+              Estimasi Waktu Baca
+            </label>
+            <div
+              id="article-reading-time-badge"
+              style="padding: 0.5rem; background: var(--bone-200); border-radius: 2px; font-size: 12px; color: var(--stone-700); text-align: center;">
+              1 menit baca
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label
+            style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--stone-500); margin-bottom: 3px;">
+            Isi Narasi Editorial (Teks Terstruktur)
+          </label>
+          <textarea
+            id="article-content-input"
+            rows="6"
+            placeholder="Tuliskan narasi editorial Anda di sini..."
+            style="width: 100%; padding: 0.6rem; border: 1px solid var(--bone-300); border-radius: 2px; line-height: 1.6;"
+          ></textarea>
+        </div>
+
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--bone-200); padding-top: 1rem;">
+          <button
+            class="btn-primary"
+            id="publish-article-btn"
+            type="button"
+            style="display:none; background:#2e7d32; border-color:#2e7d32;">
+            🚀 Terbitkan Artikel
+          </button>
+          <div style="display: flex; gap: 0.5rem; margin-left: auto;">
+            <button
+              class="btn-secondary"
+              type="button"
+              onclick="document.getElementById('article-editor-dialog').close()">
+              Batal
+            </button>
+            <button class="btn-primary" type="submit"> Simpan Draf </button>
+          </div>
+        </div>
+      </form>
     </dialog>
 
     <script src="../admin/admin-auth.ts"></script>
