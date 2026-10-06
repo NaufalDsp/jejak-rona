@@ -53,6 +53,25 @@ const articleSchema = {
   publishedTime={post.publishedAt}
   jsonLd={articleSchema}>
   <article class="article-page">
+    <div class="article-top-nav">
+      <a href="/artikel" class="btn-back">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Kembali ke Arsip Artikel</span>
+      </a>
+    </div>
+
     <!-- Kepala Artikel (6.9 design.md) -->
     <header class="article-header">
       <div class="article-header__meta">
@@ -141,8 +160,44 @@ const articleSchema = {
 
 <style>
   .article-page {
-    padding-top: calc(var(--header-height, 68px) + 3.5rem);
+    padding-top: calc(var(--header-height, 68px) + 2rem);
     padding-bottom: 6rem;
+  }
+
+  .article-top-nav {
+    max-width: var(--container-wide, 1280px);
+    margin: 0 auto 2rem;
+    padding: 0 var(--space-6, 1.5rem);
+  }
+
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border: 1px solid var(--sand-400, #c8beaf);
+    border-radius: 2px;
+    background: var(--paper-0, #ffffff);
+    color: var(--ink-950, #12110d);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 160ms var(--ease-out, ease);
+  }
+
+  .btn-back svg {
+    transition: transform 160ms var(--ease-out, ease);
+  }
+
+  .btn-back:hover {
+    background: var(--ink-950, #12110d);
+    color: var(--bone-50, #f6f1e9);
+    border-color: var(--ink-950, #12110d);
+  }
+
+  .btn-back:hover svg {
+    transform: translateX(-3px);
   }
 
   .article-header {

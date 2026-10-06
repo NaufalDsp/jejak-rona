@@ -24,6 +24,8 @@ import DialogArticleEditor from "../components/admin/DialogArticleEditor.astro";
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.svg" />
     <title>Panel Admin | Jejak Rona</title>
   </head>
   <body>
@@ -31,7 +33,13 @@ import DialogArticleEditor from "../components/admin/DialogArticleEditor.astro";
       <!-- Navigasi Samping Sempit & Jelas (design.md Bagian 9) -->
       <aside class="admin-sidebar" aria-label="Navigasi admin">
         <div class="admin-brand">
-          <span class="brand-badge">JR</span>
+          <img
+            src="/logo-mark.svg"
+            alt=""
+            width="22"
+            height="22"
+            style="filter: brightness(0) invert(1);"
+          />
           <span class="brand-title">Jejak Rona</span>
         </div>
 

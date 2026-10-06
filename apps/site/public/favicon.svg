@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="jr-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C85A32"/>
+      <stop offset="100%" stop-color="#E27248"/>
+    </linearGradient>
+  </defs>
+  <!-- Background rounded container -->
+  <rect width="64" height="64" rx="14" fill="#12110D"/>
+  <rect x="1" y="1" width="62" height="62" rx="13" fill="none" stroke="#2B2821" stroke-width="1"/>
+  
+  <!-- Subtle circular aperture / horizon arc -->
+  <circle cx="32" cy="32" r="23" fill="none" stroke="#26231D" stroke-width="1.5"/>
+  <circle cx="32" cy="32" r="19" fill="none" stroke="#C85A32" stroke-width="1" stroke-opacity="0.35" stroke-dasharray="2 3"/>
+
+  <!-- Monogram J (Terracotta) -->
+  <path d="M25 21 V37 C25 41.5 22 43.5 18 43.5 C16 43.5 14.5 42.8 13.5 41.8 L15 39 C15.6 39.5 16.5 40 17.5 40 C19.5 40 21 38.8 21 36.5 V21 H25 Z" fill="url(#jr-grad)"/>
+
+  <!-- Monogram R (Bone Parchment) -->
+  <path d="M28 21 H40 C45 21 48 23.5 48 27.5 C48 30.8 45.8 33 42.5 33.7 L49 43.5 H44 L38 34.5 H32 V43.5 H28 V21 Z M32 25 V31 H39.5 C42 31 43.8 29.8 43.8 27.5 C43.8 25.2 42 25 39.5 25 H32 Z" fill="#F6F1E9"/>
+
+  <!-- Focal point dot (Rona / Cahaya) -->
+  <circle cx="32" cy="17" r="2" fill="#C85A32"/>
+</svg>

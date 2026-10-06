@@ -23,6 +23,7 @@ const {
 } = Astro.props;
 const navLinks = await getSiteNav();
 const siteSettings = await getSiteSettings();
+const isHome = Astro.url.pathname === "/";
 
 const canonical = canonicalUrl || Astro.url.href;
 const metaDesc = description || siteSettings.description;
@@ -73,6 +74,9 @@ const defaultOrgSchema = {
       set:html={JSON.stringify(jsonLd || defaultOrgSchema)}
     />
 
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.svg" />
+
     <title>{title} — {siteSettings.siteName}</title>
     {
       heroImage && (
@@ -82,14 +86,48 @@ const defaultOrgSchema = {
   </head>
   <body>
     <a class="skip-link" href="#main-content">Lewati ke konten</a>
-    <header class="site-header">
+    <header
+      class:list={[
+        "site-header",
+        {
+          "site-header--over-hero": isHome,
+          "site-header--light-page": !isHome,
+        },
+      ]}
+      id="site-header">
       <a
         class="wordmark"
         href="/"
-        aria-label={`${siteSettings.siteName}, beranda`}
-        >{siteSettings.wordmark}</a
-      >
-      <span class="header-note">{siteSettings.tagline}</span>
+        aria-label={`${siteSettings.siteName}, beranda`}>
+        <img
+          src="/logo-mark.svg"
+          alt=""
+          width="20"
+          height="20"
+          class="wordmark-logo"
+        />
+        <span>{siteSettings.wordmark}</span>
+      </a>
+
+      <!-- Menu Navigasi Desktop Terpusat -->
+      <nav class="header-nav-inline" aria-label="Navigasi utama">
+        {
+          navLinks.map((link) => {
+            const isActive =
+              link.url === "/"
+                ? Astro.url.pathname === "/"
+                : Astro.url.pathname.startsWith(link.url);
+            return (
+              <a
+                href={link.url}
+                class:list={["header-nav-link", { active: isActive }]}>
+                {link.label}
+              </a>
+            );
+          })
+        }
+      </nav>
+
       <button
         class="menu-trigger"
         type="button"
@@ -101,7 +139,16 @@ const defaultOrgSchema = {
 
     <dialog class="menu-dialog" id="site-menu" aria-label="Navigasi utama">
       <div class="menu-dialog__top">
-        <a class="wordmark" href="/">{siteSettings.wordmark}</a>
+        <a class="wordmark" href="/">
+          <img
+            src="/logo-mark.svg"
+            alt=""
+            width="22"
+            height="22"
+            class="wordmark-logo"
+          />
+          <span>{siteSettings.wordmark}</span>
+        </a>
         <button class="menu-close" type="button" aria-label="Tutup menu"
           >Tutup <span aria-hidden="true">×</span></button
         >
@@ -121,7 +168,16 @@ const defaultOrgSchema = {
     <main id="main-content"><slot /></main>
 
     <footer class="site-footer">
-      <a class="wordmark" href="/">{siteSettings.wordmark}</a>
+      <a class="wordmark" href="/">
+        <img
+          src="/logo-mark.svg"
+          alt=""
+          width="20"
+          height="20"
+          class="wordmark-logo"
+        />
+        <span>{siteSettings.wordmark}</span>
+      </a>
       <p style="white-space: pre-line;">{siteSettings.footerText}</p>
       <nav aria-label="Tautan footer">
         {
@@ -195,6 +251,32 @@ const defaultOrgSchema = {
           localStorage.removeItem(cookieChoiceKey);
           if (cookieBanner) cookieBanner.hidden = false;
         });
+
+      // Kontrol Sticky & Auto-hide Header saat Bergulir (design.md 6.1)
+      let lastScrollY = window.scrollY;
+      const header = document.querySelector<HTMLElement>("#site-header");
+
+      window.addEventListener(
+        "scroll",
+        () => {
+          const currentScrollY = window.scrollY;
+          if (!header) return;
+
+          if (currentScrollY > 70) {
+            header.classList.add("site-header--scrolled");
+            if (currentScrollY > lastScrollY && currentScrollY > 160) {
+              header.classList.add("site-header--hidden");
+            } else {
+              header.classList.remove("site-header--hidden");
+            }
+          } else {
+            header.classList.remove("site-header--scrolled");
+            header.classList.remove("site-header--hidden");
+          }
+          lastScrollY = currentScrollY;
+        },
+        { passive: true },
+      );
     </script>
 
     <style is:global>
@@ -240,28 +322,93 @@ const defaultOrgSchema = {
       }
       .site-header {
         position: absolute;
-        z-index: 5;
+        z-index: 20;
         top: 0;
         left: 0;
         display: grid;
         width: 100%;
         min-height: 76px;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr auto 1fr;
         align-items: center;
         padding-inline: var(--margin-x);
         color: var(--bone-50);
+        transition:
+          transform 240ms var(--ease-out, ease),
+          background 200ms ease,
+          color 200ms ease;
+      }
+      .site-header--light-page {
+        color: var(--ink-950);
+        background: var(--bone-50);
+        border-bottom: 1px solid var(--sand-300, #ded4c5);
+      }
+      .site-header--scrolled {
+        position: fixed;
+        background: rgba(18, 17, 13, 0.96);
+        backdrop-filter: blur(10px);
+        color: var(--bone-50) !important;
+        min-height: 64px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      }
+      .site-header--hidden {
+        transform: translateY(-100%);
       }
       .wordmark {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
         width: fit-content;
         color: inherit;
         font-size: 13px;
         font-weight: 600;
-        letter-spacing: 0;
+        letter-spacing: 0.06em;
         text-decoration: none;
       }
-      .header-note {
-        justify-self: center;
-        font-size: 11px;
+      .wordmark-logo {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+      }
+      .header-nav-inline {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25rem;
+      }
+      @media (min-width: 540px) {
+        .header-nav-inline {
+          display: flex;
+        }
+      }
+      @media (min-width: 768px) {
+        .header-nav-inline {
+          gap: 2rem;
+        }
+      }
+      .header-nav-link {
+        font-family: var(--font-ui);
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: inherit;
+        opacity: 0.75;
+        padding-bottom: 4px;
+        border-bottom: 2px solid transparent;
+        transition:
+          opacity 160ms,
+          border-color 160ms;
+      }
+      .header-nav-link:hover {
+        opacity: 1;
+        border-bottom-color: currentColor;
+      }
+      .header-nav-link.active {
+        opacity: 1;
+        font-weight: 600;
+        border-bottom-color: var(--ember-600, #c85a32);
       }
       .menu-trigger,
       .menu-close {

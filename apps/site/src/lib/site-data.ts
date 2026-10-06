@@ -17,7 +17,9 @@ export interface SiteMeta {
 
 const defaultNav: NavLink[] = [
   { label: "Beranda", url: "/", order: "01" },
-  { label: "Tentang", url: "/tentang", order: "02" },
+  { label: "Artikel", url: "/artikel", order: "02" },
+  { label: "Tentang", url: "/tentang", order: "03" },
+  { label: "Kontak", url: "/kontak", order: "04" },
 ];
 
 const defaultMeta: SiteMeta = {
@@ -54,11 +56,33 @@ export async function getSiteNav(): Promise<NavLink[]> {
       return defaultNav;
     }
 
-    return data.map((item, idx) => ({
+    const items: NavLink[] = data.map((item, idx) => ({
       label: item.label,
       url: item.url || "#",
       order: String(idx + 1).padStart(2, "0"),
     }));
+
+    if (
+      !items.some(
+        (it) => it.url === "/artikel" || it.label.toLowerCase() === "artikel",
+      )
+    ) {
+      items.splice(1, 0, { label: "Artikel", url: "/artikel", order: "02" });
+    }
+
+    if (
+      !items.some(
+        (it) => it.url === "/kontak" || it.label.toLowerCase() === "kontak",
+      )
+    ) {
+      items.push({ label: "Kontak", url: "/kontak", order: "04" });
+    }
+
+    items.forEach((it, idx) => {
+      it.order = String(idx + 1).padStart(2, "0");
+    });
+
+    return items;
   } catch {
     return defaultNav;
   }
