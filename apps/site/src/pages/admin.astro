@@ -400,15 +400,15 @@ import "../admin/admin.css";
                 </div>
               </form>
 
-              <!-- Workspace 3 Zona (Kiri: Blok, Tengah: Bidang, Kanan: Pratinjau) -->
+              <!-- Workspace 3 Zona Sesuai design.md: Kiri (Daftar Blok), Tengah (Pratinjau Asli), Kanan (Panel Bidang) -->
               <div
-                style="display: grid; grid-template-columns: 240px 320px 1fr; gap: 1rem; min-height: 620px;">
-                <!-- Zona 1: Daftar Blok -->
+                style="display: grid; grid-template-columns: 240px 1fr 340px; gap: 1rem; min-height: 640px;">
+                <!-- Zona 1: Daftar Blok (Kiri) -->
                 <div
                   class="admin-card"
                   style="padding: 1rem; display: flex; flex-direction: column;">
                   <h4
-                    style="margin: 0 0 0.75rem; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500);">
+                    style="margin: 0 0 0.75rem; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500);">
                     Struktur Blok
                   </h4>
                   <div
@@ -419,7 +419,7 @@ import "../admin/admin.css";
                     style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--bone-100); display: flex; gap: 4px;">
                     <select
                       id="new-block-type"
-                      style="flex: 1; padding: 0.35rem; font-size: 12px; border: 1px solid var(--bone-300); border-radius: 2px;">
+                      style="flex: 1; padding: 0.35rem; font-size: 13px; border: 1px solid var(--bone-300); border-radius: 2px;">
                       <option value="hero_media">Hero Media</option>
                       <option value="rich_text">Rich Text</option>
                       <option value="image_full">Gambar Penuh</option>
@@ -428,33 +428,19 @@ import "../admin/admin.css";
                       >+ Tambah</button
                     >
                   </div>
-                  <small class="muted" style="margin-top: 6px; font-size: 11px;"
+                  <small class="muted" style="margin-top: 6px; font-size: 13px;"
                     >Papan ketik: Alt + ↑ / ↓ untuk urutan.</small
                   >
                 </div>
 
-                <!-- Zona 2: Panel Bidang Blok Terpilih -->
-                <div
-                  class="admin-card"
-                  style="padding: 1rem; overflow-y: auto;">
-                  <h4
-                    style="margin: 0 0 0.75rem; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500);">
-                    Bidang Blok Terpilih
-                  </h4>
-                  <div
-                    id="block-fields"
-                    style="display: flex; flex-direction: column; gap: 0.85rem;">
-                  </div>
-                </div>
-
-                <!-- Zona 3: Pratinjau Asli Responsif (design.md: memakai komponen asli) -->
+                <!-- Zona 2: Pratinjau Draf Asli (Tengah - design.md: memakai komponen asli) -->
                 <div
                   class="admin-card"
                   style="padding: 1rem; display: flex; flex-direction: column;">
                   <div
                     style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                     <h4
-                      style="margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500);">
+                      style="margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500);">
                       Pratinjau Draf Asli
                     </h4>
                     <div
@@ -463,21 +449,21 @@ import "../admin/admin.css";
                         type="button"
                         class="btn-text"
                         data-preview-size="desktop"
-                        style="font-size: 11px; padding: 2px 6px;"
+                        style="font-size: 13px; padding: 2px 6px;"
                         >Desktop</button
                       >
                       <button
                         type="button"
                         class="btn-text"
                         data-preview-size="tablet"
-                        style="font-size: 11px; padding: 2px 6px;"
+                        style="font-size: 13px; padding: 2px 6px;"
                         >Tablet</button
                       >
                       <button
                         type="button"
                         class="btn-text"
                         data-preview-size="mobile"
-                        style="font-size: 11px; padding: 2px 6px;"
+                        style="font-size: 13px; padding: 2px 6px;"
                         >Seluler</button
                       >
                     </div>
@@ -491,6 +477,20 @@ import "../admin/admin.css";
                       sandbox="allow-same-origin"
                       style="width: 100%; height: 100%; min-height: 540px; border: 0; background: #fff;"
                     ></iframe>
+                  </div>
+                </div>
+
+                <!-- Zona 3: Panel Bidang Blok Terpilih (Kanan) -->
+                <div
+                  class="admin-card"
+                  style="padding: 1rem; overflow-y: auto;">
+                  <h4
+                    style="margin: 0 0 0.75rem; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--stone-500);">
+                    Bidang Blok Terpilih
+                  </h4>
+                  <div
+                    id="block-fields"
+                    style="display: flex; flex-direction: column; gap: 0.85rem;">
                   </div>
                 </div>
               </div>
